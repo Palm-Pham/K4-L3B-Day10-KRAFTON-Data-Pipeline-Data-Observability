@@ -1,43 +1,55 @@
 # Báo cáo cá nhân — Văn Thành Huy
 
-> Bản nháp theo phân công nhóm. Người đứng tên cần rà phần việc thực tế, bổ sung commit/minh chứng cá nhân và xác nhận trước khi nộp.
+**MSSV:** 2A20262763 · **Nhóm:** KRAFTON · **Lớp:** K4-L3B
+**Vai trò theo phân công:** Ingestion, raw lineage và cleaning · **Tỷ trọng phân công:** 20%
 
-## Thông tin và vai trò
+Báo cáo này trình bày đầy đủ phạm vi vai trò và kết quả kỹ thuật có thể kiểm tra trong repository. Phần ai trực tiếp viết mã, chạy thí nghiệm và các commit cá nhân cần được người đứng tên đối chiếu trước khi nộp.
 
-- Họ và tên: **Văn Thành Huy**
-- MSSV: **2A20262763**
-- Nhóm/lớp: KRAFTON · K4-L3B
-- Vai trò được phân công: **Ingestion, raw lineage và cleaning**
-- Tỷ trọng phân công đề xuất: **20%**
+## 1. Mục tiêu và đầu vào
 
-## Phạm vi được phân công
+Mục tiêu của vai trò là ingestion, raw lineage và cleaning. Đầu vào: Crossref API payload hoặc raw snapshot lưu trong data/raw/.
 
-**Đầu vào:** Crossref API payload hoặc snapshot data/raw/crossref_response.json.
+## 2. Công việc và cách triển khai
 
-1. Kiểm tra parse DOI, tiêu đề, abstract, tác giả, chủ đề và ngày xuất bản trong src/ingestion/crossref.py.
-2. Duy trì hai raw artifacts và fallback local khi không tải được payload mới.
-3. Chuẩn hóa JATS/whitespace, bỏ DOI trùng, tính age_days và tạo text_for_embedding trong src/ingestion/cleaning.py.
+1. Phân tích response Crossref thành PaperRecord; giữ DOI, tiêu đề, abstract, tác giả, chủ đề, ngày công bố và URL.
+2. Khi REFRESH_SOURCE được bật, mã thử tải API tối đa ba lần với timeout 10 giây. Nếu không có response mới, pipeline đọc snapshot local.
+3. Làm sạch JATS/XML và khoảng trắng, loại bản ghi thiếu DOI/tiêu đề, khử trùng lặp theo paper_id, tính age_days và ghép text_for_embedding từ 5 thành phần.
 
-**Bàn giao:** Bàn giao schema sạch và raw snapshot cho index, quality checks và repair.
+**Quyết định kỹ thuật:** Giữ raw response và parsed records riêng để có thể truy ngược nguồn; tạo clean dataset từ raw thay vì sửa trực tiếp snapshot. Cleaned rows được sắp theo ngày công bố giảm dần, tạo đầu vào ổn định cho index và corruption.
 
-## Artifact hiện có để đối chiếu
+## 3. Kết quả kiểm chứng
 
+Repository có 24 raw records và 24 clean records. Clean schema chứa paper_id, title, summary, authors_joined, categories_joined, published, age_days và text_for_embedding. Số liệu này mô tả artifact hiện có, chưa tự chứng minh tác giả của các commit.
+
+Artifact liên quan:
+
+- [src/ingestion/crossref.py](../src/ingestion/crossref.py)
+- [src/ingestion/cleaning.py](../src/ingestion/cleaning.py)
 - [data/raw/crossref_response.json](../data/raw/crossref_response.json)
 - [data/raw/crossref_records.json](../data/raw/crossref_records.json)
-- [data/clean/papers_clean.csv](../data/clean/papers_clean.csv)
 - [data/clean/papers_clean.json](../data/clean/papers_clean.json)
+- [data/clean/papers_clean.csv](../data/clean/papers_clean.csv)
 
-Các artifact trên chứng minh trạng thái repository; chỉ riêng sự tồn tại của chúng không chứng minh ai đã viết mã hoặc chạy thí nghiệm.
+Sự tồn tại của artifact là bằng chứng về trạng thái dự án, không tự động chứng minh quyền tác giả của một thành viên.
 
-## Cách kiểm chứng phần việc
+## 4. Bàn giao và phối hợp
 
-Đối chiếu 24 raw records với 24 clean records; xác nhận paper_id không rỗng và không trùng.
+Bàn giao raw snapshot cho luồng repair; bàn giao clean CSV/JSON và schema cho embedding, quality checks và golden evaluation.
 
-## Tự xác nhận trước khi nộp
+## 5. Cách tái hiện
 
-- [ ] Tôi đã thực hiện hoặc review đúng các mục được ghi trong báo cáo này.
-- [ ] Tôi đã đối chiếu commit của mình trên nhánh nộp bài.
-- [ ] Tôi có thể giải thích input, output, giới hạn và cách kiểm chứng của phần việc.
-- [ ] Tôi đã sửa các mục không đúng với đóng góp thực tế của mình.
+- Đếm 24 raw records và 24 clean rows; so sánh tập DOI giữa hai file.
+- Kiểm tra paper_id/title không rỗng, DOI duy nhất và text_for_embedding có đủ Title, Authors, Published, Categories, Summary.
+- Chạy Phase 1 với REFRESH_SOURCE=0 để tái hiện từ local snapshot, tránh thay đổi corpus trước lúc demo.
 
-Báo cáo kết quả chung và các số liệu cập nhật nằm ở [group_report.md](group_report.md).
+## 6. Giới hạn và câu hỏi thuyết trình
+
+**Giới hạn:** Chế độ tải API mới phụ thuộc mạng và có thể trả về corpus khác; golden set hiện được cố định theo snapshot 24 bài. Cần tạo benchmark mới nếu refresh dữ liệu nguồn.
+
+**Câu hỏi có thể gặp:** Nếu được hỏi vì sao phải giữ raw snapshot: nó là mốc lineage và nguồn tái tạo sau corruption; cleaned data có thể tính lại từ raw mà không cần đoán ngược giá trị đã bị sửa.
+
+## 7. Xác nhận nội dung cá nhân
+
+Trước khi nộp, người đứng tên cần đối chiếu mô tả công việc với phần mình thực hiện và lịch sử commit trên nhánh nộp bài. Nếu phân công khác đóng góp thực tế, sửa báo cáo này và TEAM.md cho khớp.
+
+Số liệu toàn nhóm được đối chiếu tại [group_report.md](group_report.md).

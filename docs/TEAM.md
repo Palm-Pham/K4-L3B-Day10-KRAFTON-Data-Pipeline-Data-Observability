@@ -37,7 +37,7 @@ Nội dung dưới đây đã được điền theo tên và công việc của 
 - Phần việc: Duy trì hai raw artifacts và fallback local khi không tải được payload mới.
 - Phần việc: Chuẩn hóa JATS/whitespace, bỏ DOI trùng, tính age_days và tạo text_for_embedding trong src/ingestion/cleaning.py.
 - Bàn giao: Bàn giao schema sạch và raw snapshot cho index, quality checks và repair.
-- Báo cáo cá nhân: [report/2A20262763_VanThanhHuy.md](../report/2A20262763_VanThanhHuy.md).
+- Báo cáo cá nhân đã điền: [report/2A20262763_VanThanhHuy.md](../report/2A20262763_VanThanhHuy.md).
 
 ### Võ Đức Tài — 2A202603007
 
@@ -46,7 +46,7 @@ Nội dung dưới đây đã được điền theo tên và công việc của 
 - Phần việc: Giữ golden set 10 câu, challenge set 2 câu và tính Hit@1, Hit@4, Token F1 trong src/evaluation/.
 - Phần việc: Đối chiếu báo cáo pha 1, corruption report và bảng số liệu trong src/observability/reporting.py.
 - Bàn giao: Bàn giao quality/freshness signal, golden set và metrics cho dashboard/demo.
-- Báo cáo cá nhân: [report/2A202603007_VoDucTai.md](../report/2A202603007_VoDucTai.md).
+- Báo cáo cá nhân đã điền: [report/2A202603007_VoDucTai.md](../report/2A202603007_VoDucTai.md).
 
 ### Phan Đình Bảo Khôi — 2A202602434
 
@@ -55,7 +55,7 @@ Nội dung dưới đây đã được điền theo tên và công việc của 
 - Phần việc: Quản lý ba Chroma collections, đối sánh DOI/tiêu đề và BM25 rerank trong src/retrieval/index.py.
 - Phần việc: Kiểm tra QA metadata và chế độ LLM có trích dẫn DOI trong src/retrieval/qa.py, llm.py.
 - Bàn giao: Bàn giao hàm truy xuất và ba index cho evaluation và live demo.
-- Báo cáo cá nhân: [report/2A202602434_PhanDinhBaoKhoi.md](../report/2A202602434_PhanDinhBaoKhoi.md).
+- Báo cáo cá nhân đã điền: [report/2A202602434_PhanDinhBaoKhoi.md](../report/2A202602434_PhanDinhBaoKhoi.md).
 
 ### Nguyễn Thùy Linh — 2A202602497
 
@@ -64,7 +64,7 @@ Nội dung dưới đây đã được điền theo tên và công việc của 
 - Phần việc: Đối chiếu corruption log, dữ liệu lỗi và quality/freshness alerts.
 - Phần việc: Kiểm tra luồng tái tạo cleaned data và Chroma repaired từ raw snapshot trong src/pipelines/corruption_flow.py.
 - Bàn giao: Bàn giao corrupted/repaired artifacts để chấm trên cùng golden set và tạo bảng so sánh.
-- Báo cáo cá nhân: [report/2A202602497_NguyenThuyLinh.md](../report/2A202602497_NguyenThuyLinh.md).
+- Báo cáo cá nhân đã điền: [report/2A202602497_NguyenThuyLinh.md](../report/2A202602497_NguyenThuyLinh.md).
 
 ### Nguyễn Thị Thùy Linh — 2A202602909
 
@@ -73,14 +73,14 @@ Nội dung dưới đây đã được điền theo tên và công việc của 
 - Phần việc: Chạy luồng corruption/repair và đối chiếu artifact cuối cùng; kết nối các phần việc qua script/.
 - Phần việc: Chuẩn bị dashboard/ và kịch bản trình bày baseline, corrupted, repaired cùng live retrieval.
 - Bàn giao: Tích hợp các artifact đã khóa từ bốn luồng còn lại để demo nhất quán.
-- Báo cáo cá nhân: [report/2A202602909_NguyenThiThuyLinh.md](../report/2A202602909_NguyenThiThuyLinh.md).
+- Báo cáo cá nhân đã điền: [report/2A202602909_NguyenThiThuyLinh.md](../report/2A202602909_NguyenThiThuyLinh.md).
 
 ## Xác nhận trước khi nộp
 
 | Thành viên | Nội dung theo phân công | Báo cáo cá nhân | Commit/đóng góp thực tế |
 | :--- | :---: | :---: | :---: |
-| Văn Thành Huy | Đã điền | Bản nháp đã tạo | Chờ cá nhân xác nhận |
-| Võ Đức Tài | Đã điền | Bản nháp đã tạo | Chờ cá nhân xác nhận |
-| Phan Đình Bảo Khôi | Đã điền | Bản nháp đã tạo | Chờ cá nhân xác nhận |
-| Nguyễn Thùy Linh | Đã điền | Bản nháp đã tạo | Chờ cá nhân xác nhận |
-| Nguyễn Thị Thùy Linh | Đã điền | Bản nháp đã tạo | Chờ cá nhân xác nhận |
+| Văn Thành Huy | Đã điền | Đã điền nội dung | Chờ cá nhân xác nhận |
+| Võ Đức Tài | Đã điền | Đã điền nội dung | Chờ cá nhân xác nhận |
+| Phan Đình Bảo Khôi | Đã điền | Đã điền nội dung | Chờ cá nhân xác nhận |
+| Nguyễn Thùy Linh | Đã điền | Đã điền nội dung | Chờ cá nhân xác nhận |
+| Nguyễn Thị Thùy Linh | Đã điền | Đã điền nội dung | Chờ cá nhân xác nhận |

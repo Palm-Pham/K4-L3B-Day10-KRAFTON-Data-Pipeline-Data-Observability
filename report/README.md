@@ -7,9 +7,9 @@ Thư mục `report/` cung cấp mẫu báo cáo cho **bài tập bắt buộc l�
 Mỗi nhóm nộp:
 
 1. Một [`group_report.md`](group_report.md) đại diện cho kết quả chung của nhóm.
-2. Mỗi thành viên rà và hoàn thiện bản nháp theo đúng tên/MSSV trong [danh sách báo cáo cá nhân](individual_report.md). Bản nháp ghi công việc được phân công và artifact hiện có; cá nhân cần xác nhận phần mình thực hiện, commit và mức hiểu trước khi nộp.
+2. Mỗi thành viên kiểm tra báo cáo theo đúng tên/MSSV trong [danh sách báo cáo cá nhân](individual_report.md). Báo cáo ghi công việc được phân công, kết quả và artifact hiện có; cá nhân cần xác nhận phần mình thực hiện, commit và mức hiểu trước khi nộp.
 
-Năm bản nháp đã được tạo theo quy ước:
+Năm báo cáo đã được điền theo quy ước:
 
 ```text
 <MSSV>_HoTen.md

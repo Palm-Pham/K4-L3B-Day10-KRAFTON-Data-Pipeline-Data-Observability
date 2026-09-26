@@ -1,6 +1,6 @@
-# Mẫu báo cáo cá nhân và danh sách 5 bản nháp
+# Danh sách báo cáo cá nhân — 5 thành viên
 
-Mỗi thành viên mở đúng file dưới đây, đối chiếu công việc thực tế và hoàn tất các mục tự xác nhận trước khi nộp. Nội dung được tạo từ phân công nhóm, không thay cho lời tự khai của cá nhân.
+Đã điền nội dung kỹ thuật theo phân công cho đủ 5 người. Mỗi người mở đúng file dưới đây, đối chiếu phần việc thực tế và lịch sử commit trước khi nộp; bản viết theo vai trò không thay cho xác nhận cá nhân.
 
 - [Văn Thành Huy — 2A20262763](2A20262763_VanThanhHuy.md)
 - [Võ Đức Tài — 2A202603007](2A202603007_VoDucTai.md)
