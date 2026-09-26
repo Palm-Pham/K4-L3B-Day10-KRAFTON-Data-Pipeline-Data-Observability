@@ -1,14 +1,26 @@
 from __future__ import annotations
 
 from functools import lru_cache
+from typing import Any
 
+from chromadb.utils.embedding_functions import ONNXMiniLM_L6_V2
 from langchain_core.embeddings import Embeddings
-from sentence_transformers import SentenceTransformer
 
 
 @lru_cache(maxsize=4)
-def _load_model(model_name: str) -> SentenceTransformer:
-    return SentenceTransformer(model_name)
+def _load_model(model_name: str) -> Any:
+    try:
+        from sentence_transformers import SentenceTransformer
+        return SentenceTransformer(model_name, local_files_only=True)
+    except Exception:
+        pass
+
+    try:
+        # Use offline Chroma built-in ONNX implementation of all-MiniLM-L6-v2
+        return ONNXMiniLM_L6_V2()
+    except Exception:
+        from sentence_transformers import SentenceTransformer
+        return SentenceTransformer(model_name)
 
 
 class MiniLMEmbeddings(Embeddings):
@@ -16,9 +28,15 @@ class MiniLMEmbeddings(Embeddings):
         self.model = _load_model(model_name)
 
     def embed_documents(self, texts: list[str]) -> list[list[float]]:
-        embeddings = self.model.encode(texts, normalize_embeddings=True)
-        return embeddings.tolist()
+        if hasattr(self.model, "encode"):
+            embeddings = self.model.encode(texts, normalize_embeddings=True)
+            return embeddings.tolist()
+        raw_embeddings = self.model(texts)
+        return [[float(x) for x in emb] for emb in raw_embeddings]
 
     def embed_query(self, text: str) -> list[float]:
-        embedding = self.model.encode([text], normalize_embeddings=True)
-        return embedding[0].tolist()
+        if hasattr(self.model, "encode"):
+            embedding = self.model.encode([text], normalize_embeddings=True)
+            return embedding[0].tolist()
+        raw_embeddings = self.model([text])
+        return [float(x) for x in raw_embeddings[0]]

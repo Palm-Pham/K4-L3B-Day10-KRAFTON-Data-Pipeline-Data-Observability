@@ -1,0 +1,92 @@
+[
+  {
+    "id": "q-01",
+    "question_type": "summary",
+    "question": "What problem do static benchmarks create for enterprise knowledge bases?",
+    "ground_truth": "Static benchmarks fail to capture domain drift in enterprise knowledge bases.",
+    "ground_truth_doc_ids": [
+      "10.1145/3637528.3671812"
+    ]
+  },
+  {
+    "id": "q-02",
+    "question_type": "authors",
+    "question": "Who wrote the multi-agent debate paper on fact verification?",
+    "ground_truth": "Phong Vu, Ngan Hoang",
+    "ground_truth_doc_ids": [
+      "10.1145/3637528.3671808"
+    ]
+  },
+  {
+    "id": "q-03",
+    "question_type": "date",
+    "question": "When was DOI 10.1145/3637528.3671804 published?",
+    "ground_truth": "2026-07-05",
+    "ground_truth_doc_ids": [
+      "10.1145/3637528.3671804"
+    ]
+  },
+  {
+    "id": "q-04",
+    "question_type": "categories",
+    "question": "Which subject areas classify the paper on fuzzing vector search with corrupted chunks?",
+    "ground_truth": "Robustness, Information Retrieval",
+    "ground_truth_doc_ids": [
+      "10.1145/3637528.3671807"
+    ]
+  },
+  {
+    "id": "q-05",
+    "question_type": "summary",
+    "question": "What problem do orphaned embeddings from soft deletion cause?",
+    "ground_truth": "Soft-deletions in vector databases leave orphaned embeddings that lead to hallucinations.",
+    "ground_truth_doc_ids": [
+      "10.1145/3637528.3671803"
+    ]
+  },
+  {
+    "id": "q-06",
+    "question_type": "authors",
+    "question": "Who wrote the study combining sparse lexical retrieval with dense vectors?",
+    "ground_truth": "Dat Tran, Lan Pham",
+    "ground_truth_doc_ids": [
+      "10.1145/3637528.3671811"
+    ]
+  },
+  {
+    "id": "q-07",
+    "question_type": "date",
+    "question": "What is the publication date of DOI 10.1145/3637528.3671818?",
+    "ground_truth": "2026-06-06",
+    "ground_truth_doc_ids": [
+      "10.1145/3637528.3671818"
+    ]
+  },
+  {
+    "id": "q-08",
+    "question_type": "categories",
+    "question": "What categories apply to DOI 10.1145/3637528.3671809?",
+    "ground_truth": "Information Retrieval, Natural Language Processing",
+    "ground_truth_doc_ids": [
+      "10.1145/3637528.3671809"
+    ]
+  },
+  {
+    "id": "q-09",
+    "question_type": "summary",
+    "question": "What happens to RAG answer faithfulness when data is silently corrupted?",
+    "ground_truth": "Silent data corruption in RAG pipelines degrades LLM answer faithfulness without throwing runtime errors.",
+    "ground_truth_doc_ids": [
+      "10.1145/3637528.3671802"
+    ]
+  },
+  {
+    "id": "q-10",
+    "question_type": "authors",
+    "question": "Who are the authors of the Great Expectations data-quality profiling study?",
+    "ground_truth": "Son Nguyen, Thuy Doan",
+    "ground_truth_doc_ids": [
+      "10.1145/3637528.3671810"
+    ]
+  }
+]

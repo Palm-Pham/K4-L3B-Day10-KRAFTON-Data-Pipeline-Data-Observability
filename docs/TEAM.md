@@ -1,58 +1,86 @@
-# Danh Sách Thành Viên & Báo Cáo Phân Công Nhóm
+# TEAM — KRAFTON
 
-- **Tên Nhóm:** `[Điền tên nhóm]`
-- **Mã Nhóm / Lớp:** `K4-L3-DAY10`
-- **Tên Repository Nộp Bài:** `K4-L3-DAY10-TenNhom-DataPipeline`
+- Lớp: K4-L3B-DAY10
+- Repository: K4-L3B-Day10-KRAFTON-Data-Pipeline-Data-Observability
+- Phân công: 5 luồng chính, tỷ trọng đề xuất 20% mỗi người.
 
----
+## Danh sách và phân công
 
-## # Thành viên
+| STT | Họ và tên | MSSV | Tỷ trọng đề xuất | Phụ trách chính | Bằng chứng cần đối chiếu |
+| ---: | :--- | :--- | ---: | :--- | :--- |
+| 1 | Văn Thành Huy | 2A20262763 | 20% | Ingestion, raw lineage, cleaning | src/ingestion/crossref.py, cleaning.py; data/raw/, data/clean/ |
+| 2 | Võ Đức Tài | 2A202603007 | 20% | GX quality, Freshness SLA, golden evaluation, reporting | src/observability/quality.py, reporting.py, src/evaluation/; data/quality/, data/eval/, data/results/ |
+| 3 | Phan Đình Bảo Khôi | 2A202602434 | 20% | Embedding, Chroma, QA retrieval | src/retrieval/embeddings.py, index.py, qa.py, llm.py; data/chroma/, data/embeddings/ |
+| 4 | Nguyễn Thùy Linh | 2A202602497 | 20% | Corruption suite và repair từ raw snapshot | src/ingestion/corruption.py, src/pipelines/corruption_flow.py; corruption_log.json, repaired artifacts |
+| 5 | Nguyễn Thị Thùy Linh | 2A202602909 | 20% | Orchestration, dashboard và live demo | src/pipelines/phase1.py, script/, dashboard/; kiểm tra end-to-end |
 
-| STT | Họ và tên | MSSV | Email | Vai trò & Phân công công việc | Báo cáo cá nhân |
-|---:|---|---|---|---|---|
-| 1 | | | | Trưởng nhóm / Pipeline Integrator (`core/`, `phase1.py`, `corruption_flow.py`) | `report/<MSSV1>_HoTen.md` |
-| 2 | | | | Data Foundation & Recovery (`crossref.py`, `cleaning.py`, raw data) | `report/<MSSV2>_HoTen.md` |
-| 3 | | | | RAG & Vector Index (`retrieval/index.py`, `embeddings.py`, ChromaDB) | `report/<MSSV3>_HoTen.md` |
-| 4 | | | | Observability & Evaluation (`quality.py` GX 1.x, `testset.py`, reporting) | `report/<MSSV4>_HoTen.md` |
+Hai thành viên tên gần giống nhau được phân biệt bằng đầy đủ họ tên và MSSV ở mọi artifact nộp bài.
 
-*(Nếu nhóm có 3 hoặc 5-6 thành viên, xem bảng phân công chi tiết theo vai trò trong file `CHECKPOINTS.md`)*.
+## Ranh giới công việc và bàn giao
 
----
+1. Huy bàn giao raw snapshot và clean schema cho Tài, Bảo Khôi và Nguyễn Thùy Linh.
+2. Bảo Khôi bàn giao ba Chroma collections và API truy xuất cho Tài và Nguyễn Thị Thùy Linh.
+3. Nguyễn Thùy Linh bàn giao corruption log và repaired artifacts cho Tài đánh giá.
+4. Tài khóa golden set 10 câu, quality/freshness reports và bảng metrics.
+5. Nguyễn Thị Thùy Linh tích hợp pipeline baseline và dashboard trình chiếu từ các artifact đã bàn giao.
 
-## # Cá nhân
+Mỗi luồng cần có review chéo ít nhất một lần để giảm nghẽn khi bàn giao. Người phụ trách báo cáo cần lấy số liệu trực tiếp từ artifact, không tự nhập lại kết quả cũ.
 
-### ## HoVaTen1-MSSV1
-- **Vai trò:** Trưởng nhóm & Điều phối Pipeline.
-- **Công việc chi tiết đã hoàn thành:**
-  - Thiết lập cấu hình hệ thống `core/config.py` và đường dẫn artifacts `core/utils.py`.
-  - Kết nối luồng thực thi trong `src/pipelines/phase1.py` và `src/pipelines/corruption_flow.py`.
-  - Kiểm tra tính nhất quán của các artifacts và theo dõi Contributor tracking trên GitHub nhánh `main`.
-- **Điều học được / Đóng góp chính:**
-  - Hiểu sâu sắc về thiết kế Idempotent Pipeline và quản lý trạng thái luồng dữ liệu đa tầng.
+## Nội dung tự khai theo phân công
 
-### ## HoVaTen2-MSSV2
-- **Vai trò:** Phụ trách Ingestion, Làm sạch & Phục hồi dữ liệu.
-- **Công việc chi tiết đã hoàn thành:**
-  - Xây dựng module thu thập Crossref API với cơ chế Fallback offline trong `src/ingestion/crossref.py`.
-  - Chuẩn hóa schema, tính toán trường `age_days` và `text_for_embedding` trong `src/ingestion/cleaning.py`.
-  - Thực thi cơ chế Idempotent Repair phục hồi dữ liệu từ raw snapshot.
-- **Điều học được / Đóng góp chính:**
-  - Kỹ thuật truy vết nguồn gốc dữ liệu (Data Lineage) và bảo toàn raw snapshot trước khi biến đổi.
+Nội dung dưới đây đã được điền theo tên và công việc của từng thành viên. Đây là phạm vi được giao, không phải bằng chứng rằng cá nhân đã tự viết mã. Mỗi người cần kiểm tra và sửa bản báo cáo cá nhân trước khi nộp.
 
-### ## HoVaTen3-MSSV3
-- **Vai trò:** Phụ trách RAG, Vector Database & Embedding.
-- **Công việc chi tiết đã hoàn thành:**
-  - Quản lý mô hình embedding `sentence-transformers/all-MiniLM-L6-v2`.
-  - Nạp và quản lý 3 collection riêng biệt trong ChromaDB (`papers-baseline`, `papers-corrupted`, `papers-repaired`).
-  - Xây dựng QA Agent truy vấn ngữ cảnh chính xác theo tài liệu.
-- **Điều học được / Đóng góp chính:**
-  - Cách cô lập các không gian vector để so sánh khách quan giữa dữ liệu sạch và dữ liệu bị lỗi.
+### Văn Thành Huy — 2A20262763
 
-### ## HoVaTen4-MSSV4
-- **Vai trò:** Phụ trách Data Observability & Benchmark Evaluation.
-- **Công việc chi tiết đã hoàn thành:**
-  - Thiết lập Quality Gate theo chuẩn mới **Great Expectations 1.x** và giám sát Freshness SLA trong `src/observability/quality.py`.
-  - Xây dựng bộ câu hỏi đánh giá chuẩn trong `src/evaluation/testset.py`.
-  - Đo lường và xuất bảng đối chiếu 3 trạng thái vào `data/reports/corruption_report.md`.
-- **Điều học được / Đóng góp chính:**
-  - Cách thiết lập hệ thống cảnh báo sớm chặn đứng hiện tượng Silent Failure trước khi dữ liệu vào serving layer.
+- Vai trò: Ingestion, raw lineage và cleaning (20% phân công đề xuất).
+- Phần việc: Kiểm tra parse DOI, tiêu đề, abstract, tác giả, chủ đề và ngày xuất bản trong src/ingestion/crossref.py.
+- Phần việc: Duy trì hai raw artifacts và fallback local khi không tải được payload mới.
+- Phần việc: Chuẩn hóa JATS/whitespace, bỏ DOI trùng, tính age_days và tạo text_for_embedding trong src/ingestion/cleaning.py.
+- Bàn giao: Bàn giao schema sạch và raw snapshot cho index, quality checks và repair.
+- Báo cáo cá nhân đã điền: [report/2A20262763_VanThanhHuy.md](../report/2A20262763_VanThanhHuy.md).
+
+### Võ Đức Tài — 2A202603007
+
+- Vai trò: GX quality, Freshness SLA, golden evaluation và reporting (20% phân công đề xuất).
+- Phần việc: Kiểm tra 5 Great Expectations và Freshness SLA trong src/observability/quality.py.
+- Phần việc: Giữ golden set 10 câu, challenge set 2 câu và tính Hit@1, Hit@4, Token F1 trong src/evaluation/.
+- Phần việc: Đối chiếu báo cáo pha 1, corruption report và bảng số liệu trong src/observability/reporting.py.
+- Bàn giao: Bàn giao quality/freshness signal, golden set và metrics cho dashboard/demo.
+- Báo cáo cá nhân đã điền: [report/2A202603007_VoDucTai.md](../report/2A202603007_VoDucTai.md).
+
+### Phan Đình Bảo Khôi — 2A202602434
+
+- Vai trò: Embedding, Chroma index và QA retrieval (20% phân công đề xuất).
+- Phần việc: Kiểm tra MiniLM embeddings và fallback local trong src/retrieval/embeddings.py.
+- Phần việc: Quản lý ba Chroma collections, đối sánh DOI/tiêu đề và BM25 rerank trong src/retrieval/index.py.
+- Phần việc: Kiểm tra QA metadata và chế độ LLM có trích dẫn DOI trong src/retrieval/qa.py, llm.py.
+- Bàn giao: Bàn giao hàm truy xuất và ba index cho evaluation và live demo.
+- Báo cáo cá nhân đã điền: [report/2A202602434_PhanDinhBaoKhoi.md](../report/2A202602434_PhanDinhBaoKhoi.md).
+
+### Nguyễn Thùy Linh — 2A202602497
+
+- Vai trò: Corruption suite và repair từ raw snapshot (20% phân công đề xuất).
+- Phần việc: Rà 6 kịch bản drop records, blank summary, inject noise, truncate title, stale date và duplicate rows trong src/ingestion/corruption.py.
+- Phần việc: Đối chiếu corruption log, dữ liệu lỗi và quality/freshness alerts.
+- Phần việc: Kiểm tra luồng tái tạo cleaned data và Chroma repaired từ raw snapshot trong src/pipelines/corruption_flow.py.
+- Bàn giao: Bàn giao corrupted/repaired artifacts để chấm trên cùng golden set và tạo bảng so sánh.
+- Báo cáo cá nhân đã điền: [report/2A202602497_NguyenThuyLinh.md](../report/2A202602497_NguyenThuyLinh.md).
+
+### Nguyễn Thị Thùy Linh — 2A202602909
+
+- Vai trò: Orchestration, dashboard và live demo (20% phân công đề xuất).
+- Phần việc: Kiểm tra thứ tự ingest → clean → index → evaluate → report trong src/pipelines/phase1.py.
+- Phần việc: Chạy luồng corruption/repair và đối chiếu artifact cuối cùng; kết nối các phần việc qua script/.
+- Phần việc: Chuẩn bị dashboard/ và kịch bản trình bày baseline, corrupted, repaired cùng live retrieval.
+- Bàn giao: Tích hợp các artifact đã khóa từ bốn luồng còn lại để demo nhất quán.
+- Báo cáo cá nhân đã điền: [report/2A202602909_NguyenThiThuyLinh.md](../report/2A202602909_NguyenThiThuyLinh.md).
+
+## Xác nhận trước khi nộp
+
+| Thành viên | Nội dung theo phân công | Báo cáo cá nhân | Commit/đóng góp thực tế |
+| :--- | :---: | :---: | :---: |
+| Văn Thành Huy | Đã điền | Đã điền nội dung | Chờ cá nhân xác nhận |
+| Võ Đức Tài | Đã điền | Đã điền nội dung | Chờ cá nhân xác nhận |
+| Phan Đình Bảo Khôi | Đã điền | Đã điền nội dung | Chờ cá nhân xác nhận |
+| Nguyễn Thùy Linh | Đã điền | Đã điền nội dung | Chờ cá nhân xác nhận |
+| Nguyễn Thị Thùy Linh | Đã điền | Đã điền nội dung | Chờ cá nhân xác nhận |

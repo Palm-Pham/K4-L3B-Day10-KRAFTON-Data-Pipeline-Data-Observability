@@ -1,0 +1,40 @@
+[
+  {
+    "id": "challenge-01",
+    "question_type": "authors",
+    "question": "Who authored 'Quantum Potato Retrieval Networks'?",
+    "ground_truth": "I don't know from the indexed corpus.",
+    "ground_truth_doc_ids": [],
+    "answerable": false,
+    "answer": "I don't know from the indexed corpus.",
+    "retrieved_doc_ids": [],
+    "retrieved_contexts": [],
+    "retrieval_hit": true,
+    "retrieval_hit_at_1": true,
+    "token_f1": 1.0,
+    "judge": {
+      "score": 5,
+      "correct": true,
+      "reasoning": "Fallback heuristic judge used because the LLM evaluator was unavailable."
+    }
+  },
+  {
+    "id": "challenge-02",
+    "question_type": "date",
+    "question": "When was 'A Completely Unknown Study of Martian Indexes' published?",
+    "ground_truth": "I don't know from the indexed corpus.",
+    "ground_truth_doc_ids": [],
+    "answerable": false,
+    "answer": "I don't know from the indexed corpus.",
+    "retrieved_doc_ids": [],
+    "retrieved_contexts": [],
+    "retrieval_hit": true,
+    "retrieval_hit_at_1": true,
+    "token_f1": 1.0,
+    "judge": {
+      "score": 5,
+      "correct": true,
+      "reasoning": "Fallback heuristic judge used because the LLM evaluator was unavailable."
+    }
+  }
+]

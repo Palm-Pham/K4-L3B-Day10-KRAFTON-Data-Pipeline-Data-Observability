@@ -18,39 +18,89 @@ class AnswerResult:
 
 
 def _extract_answer(question: str, top_result: SearchResult) -> str:
-    lowered = question.lower()
+    lowered = question.casefold()
     metadata = top_result.metadata
-    if "who authored" in lowered or "list the authors" in lowered:
-        return metadata["authors_joined"]
-    if "when was" in lowered or "publication date" in lowered or "published on" in lowered:
-        return metadata["published"]
-    if "what categories" in lowered:
-        return metadata["categories_joined"]
-    return first_sentence(metadata["summary"])
-
-
-def answer_question(question: str, settings: Settings, index: LocalEmbeddingIndex, top_k: int | None = None) -> AnswerResult:
-    title_match = re.search(r"'([^']+)'", question)
-    exact = index.lookup(title_match.group(1)) if title_match else None
-    retrieved = index.search(question, top_k=top_k)
-    if exact:
-        exact_result = SearchResult(
-            paper_id=exact["paper_id"],
-            title=exact["title"],
-            score=1.0,
-            content=exact["content"],
-            metadata=exact["metadata"],
-        )
-        deduped = [exact_result] + [item for item in retrieved if item.paper_id != exact_result.paper_id]
-        retrieved = deduped[: (top_k or settings.top_k)]
-    if not retrieved:
-        answer = "I don't know from the indexed corpus."
+    if re.search(r"\b(authors?|authored|wrote|written by)\b", lowered):
+        answer = metadata.get("authors_joined", "")
+    elif re.search(r"\b(published|publication date|date of publication)\b", lowered) or "when was" in lowered:
+        answer = metadata.get("published", "")
+    elif re.search(r"\b(categories|category|subjects?)\b", lowered):
+        answer = metadata.get("categories_joined", "")
     else:
-        answer = _extract_answer(question, retrieved[0])
+        answer = first_sentence(metadata.get("summary", ""))
+    return answer or "I don't know from the indexed corpus."
+
+
+def answer_question(
+    question: str,
+    settings: Settings,
+    index: LocalEmbeddingIndex,
+    top_k: int | None = None,
+) -> AnswerResult:
+    """Return a reproducible metadata answer for evaluation and offline demos."""
+    quoted_titles = re.findall(r"'([^']+)'", question)
+    if quoted_titles and not any(index.lookup(title) for title in quoted_titles):
+        return AnswerResult(
+            question=question,
+            answer="I don't know from the indexed corpus.",
+            retrieved_doc_ids=[],
+            retrieved_contexts=[],
+            retrieved_titles=[],
+        )
+    retrieved = index.search(question, top_k=top_k)
+    answer = (
+        _extract_answer(question, retrieved[0])
+        if retrieved else "I don't know from the indexed corpus."
+    )
     return AnswerResult(
         question=question,
         answer=answer,
         retrieved_doc_ids=[item.paper_id for item in retrieved],
         retrieved_contexts=[item.content for item in retrieved],
         retrieved_titles=[item.title for item in retrieved],
+    )
+
+
+def answer_question_with_llm(
+    question: str,
+    settings: Settings,
+    index: LocalEmbeddingIndex,
+    top_k: int | None = None,
+) -> AnswerResult:
+    """Generate an answer grounded in retrieved papers, with DOI citations."""
+    from retrieval.llm import build_llm
+
+    retrieved = answer_question(question, settings, index, top_k=top_k)
+    if not retrieved.retrieved_contexts:
+        return retrieved
+
+    context = "\n\n".join(
+        f"[{paper_id}] {content}"
+        for paper_id, content in zip(
+            retrieved.retrieved_doc_ids, retrieved.retrieved_contexts, strict=True
+        )
+    )
+    prompt = (
+        "Answer the question using only the paper excerpts below. "
+        "If they do not contain enough evidence, say that you do not know. "
+        "Cite supporting papers by DOI in square brackets.\n\n"
+        f"Question: {question}\n\nPaper excerpts:\n{context}"
+    )
+    response = build_llm(settings, temperature=0.0).invoke(prompt)
+    content = response.content
+    if isinstance(content, str):
+        answer = content.strip()
+    elif isinstance(content, list):
+        answer = " ".join(
+            part if isinstance(part, str) else str(part.get("text", ""))
+            for part in content
+        ).strip()
+    else:
+        answer = str(content).strip()
+    return AnswerResult(
+        question=question,
+        answer=answer or "I don't know from the indexed corpus.",
+        retrieved_doc_ids=retrieved.retrieved_doc_ids,
+        retrieved_contexts=retrieved.retrieved_contexts,
+        retrieved_titles=retrieved.retrieved_titles,
     )
