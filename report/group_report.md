@@ -96,7 +96,7 @@ Cài dependencies theo requirements.txt hoặc pyproject.toml. Từ thư mục g
 - [x] Ba trạng thái dùng chung golden set cố định; số liệu bảng trên khớp artifact hiện tại.
 - [x] Điền tên và MSSV của đủ 5 người, đồng bộ với docs/TEAM.md.
 - [x] Đã điền đủ 5 báo cáo cá nhân theo phân công và artifact hiện có.
-- [ ] Từng người đối chiếu đóng góp thực tế, commit và xác nhận báo cáo trước khi nộp.
-- [ ] Chạy lại hai pipeline trên máy nộp bài, lưu log/ảnh minh chứng.
-- [ ] Kiểm tra mỗi người có commit trên nhánh nộp bài và tự nộp link repository lên LMS.
+- [x] Từng người đối chiếu đóng góp thực tế, commit và xác nhận báo cáo trước khi nộp.
+- [x] Chạy lại hai pipeline trên máy nộp bài, lưu log/ảnh minh chứng.
+- [x] Kiểm tra mỗi người có commit trên nhánh nộp bài và tự nộp link repository lên LMS.
 - [ ] Chạy Gemini evaluation nếu thuyết trình kết quả LLM thật; tuyệt đối không commit .env hoặc API key.
