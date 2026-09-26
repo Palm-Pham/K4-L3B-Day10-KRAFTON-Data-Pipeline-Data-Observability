@@ -46,7 +46,7 @@ Bàn giao corruption log, corrupted/repaired clean datasets, indexes và metrics
 
 ## 6. Giới hạn và câu hỏi thuyết trình
 
-**Giới hạn:** Repair cần raw snapshot còn nguyên. Luồng hiện được chạy thủ công bằng script, chưa tự kích hoạt từ kết quả quality gate; timestamp của artifact có thể đổi giữa các lần chạy.
+**Giới hạn:** Repair cần raw snapshot còn nguyên. Script tự kích hoạt repair khi GX Quality Gate thất bại hoặc Freshness SLA bị vi phạm; timestamp của artifact có thể đổi giữa các lần chạy.
 
 **Câu hỏi có thể gặp:** Nếu được hỏi tính idempotent: cùng raw snapshot và cùng quy tắc cleaning sẽ cho cùng tập DOI/nội dung sạch; collection được xóa và tái tạo thay vì cộng dồn vector cũ.
 
