@@ -5,7 +5,7 @@ from datetime import datetime, timezone
 from core.config import load_settings
 from core.utils import ensure_parent, read_json, write_csv, write_json
 from evaluation.metrics import evaluate_pipeline
-from evaluation.testset import build_test_set
+from evaluation.testset import build_challenge_set, build_test_set
 from ingestion.cleaning import build_clean_dataframe
 from ingestion.crossref import fetch_source_records
 from observability.quality import build_freshness_report, run_data_quality_checks
@@ -65,10 +65,26 @@ def main() -> None:
         answers_output_path=settings.paths.baseline_answers,
     )
     summary = eval_bundle.summary
-    print(f"   -> Retrieval Hit Rate : {summary['retrieval_hit_rate'] * 100:.1f}%")
+    print(f"   -> Retrieval Hit@4    : {summary['retrieval_hit_rate'] * 100:.1f}%")
+    print(f"   -> Retrieval Hit@1    : {summary['retrieval_hit_at_1'] * 100:.1f}%")
     print(f"   -> Mean Token F1       : {summary['mean_token_f1']:.4f}")
     print(f"   -> Judge Accuracy     : {summary['judge_accuracy'] * 100:.1f}%")
     print(f"   -> Mean Judge Score   : {summary['mean_judge_score']:.2f} / 5.0")
+
+    # Keep the two no-answer probes separate from the required 10-question benchmark.
+    challenge_path = settings.paths.eval_testset.parent / "challenge_set.json"
+    build_challenge_set(clean_df, challenge_path)
+    challenge_bundle = evaluate_pipeline(
+        settings=settings,
+        index=index,
+        test_set_path=challenge_path,
+        metrics_output_path=settings.paths.baseline_metrics.parent / "challenge_metrics.json",
+        answers_output_path=settings.paths.baseline_answers.parent / "challenge_answers.json",
+    )
+    print(
+        f"   -> No-answer challenge: "
+        f"{challenge_bundle.summary['retrieval_hit_rate'] * 100:.1f}% correct abstention"
+    )
 
     # 6. Run Data Quality Gate (GX 1.x) & Freshness SLA
     print("🛡️ [6/7] Running Data Observability checks (GX 1.x & Freshness)...")

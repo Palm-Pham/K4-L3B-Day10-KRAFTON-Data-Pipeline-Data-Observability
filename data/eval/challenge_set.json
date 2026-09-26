@@ -1,0 +1,16 @@
+[
+  {
+    "id": "challenge-01",
+    "question_type": "authors",
+    "question": "Who authored 'Quantum Potato Retrieval Networks'?",
+    "ground_truth": "I don't know from the indexed corpus.",
+    "ground_truth_doc_ids": []
+  },
+  {
+    "id": "challenge-02",
+    "question_type": "date",
+    "question": "When was 'A Completely Unknown Study of Martian Indexes' published?",
+    "ground_truth": "I don't know from the indexed corpus.",
+    "ground_truth_doc_ids": []
+  }
+]

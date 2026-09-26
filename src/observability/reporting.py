@@ -19,8 +19,8 @@ def generate_phase1_report(
 
     md = f"""# Báo Cáo Pha 1 — Baseline Data Pipeline & Observability
 
-> **Ngày tạo:** {source_summary.get("timestamp", "N/A")}  
-> **Nguồn dữ liệu:** {source_summary.get("source_name", "Crossref REST API")}  
+> **Ngày tạo:** {source_summary.get("timestamp", "N/A")}
+> **Nguồn dữ liệu:** {source_summary.get("source_name", "Crossref REST API")}
 > **Mục tiêu:** Đo lường hiệu năng Baseline của hệ thống RAG Agent trên dữ liệu học thuật sạch, thiết lập chốt kiểm dịch chất lượng tự động với Great Expectations 1.x và Freshness SLA.
 
 ---
@@ -72,10 +72,13 @@ def generate_phase1_report(
 | Chỉ số Đánh Giá (Metric) | Kết Quả Baseline | Ngưỡng Kỳ Vọng | Nhận Xét |
 | :--- | :---: | :---: | :--- |
 | **Số câu hỏi benchmark (`samples`)** | {metrics.get("samples", 0)} | 10 | Đầy đủ 4 dạng nghiệp vụ |
-| **Retrieval Hit Rate** | **{metrics.get("retrieval_hit_rate", 0.0) * 100:.1f}%** | ≥ 80.0% | Truy xuất chính xác tài liệu nguồn |
+| **Retrieval Hit@4** | **{metrics.get("retrieval_hit_rate", 0.0) * 100:.1f}%** | ≥ 80.0% | Truy xuất chính xác tài liệu nguồn |
+| **Retrieval Hit@1** | **{metrics.get("retrieval_hit_at_1", 0.0) * 100:.1f}%** | ≥ 80.0% | Đúng tài liệu ở vị trí đầu tiên |
 | **Mean Token F1** | **{metrics.get("mean_token_f1", 0.0):.4f}** | ≥ 0.7000 | Độ trùng khớp câu trả lời cao |
 | **Judge Accuracy** | **{metrics.get("judge_accuracy", 0.0) * 100:.1f}%** | ≥ 80.0% | Câu trả lời đúng chuẩn ngữ nghĩa |
 | **Mean Judge Score (Thang 1-5)** | **{metrics.get("mean_judge_score", 0.0):.2f} / 5.0** | ≥ 4.0 | Chất lượng phản hồi đồng đều |
+
+> **Nguồn chấm Judge:** {metrics.get("judge_llm_count", 0)} câu do LLM chấm; {metrics.get("judge_fallback_count", 0)} câu dùng heuristic dự phòng. Ragas: {metrics.get("ragas", {}).get("skipped", "đã chạy hoặc có lỗi; xem metrics JSON")}
 
 ---
 
@@ -131,10 +134,13 @@ def generate_corruption_report(
 | :--- | :---: | :---: | :---: | :---: | :---: |
 | **Data Quality Gate (GX 1.x)** | **PASSED ✅** | **FAILED ❌** | **PASSED ✅** | Vi phạm schema & uniqueness | Khôi phục 100% checks |
 | **Freshness SLA (age ≤ 180d)** | **ĐẠT SLA ✅** | **VI PHẠM ⚠️** | **ĐẠT SLA ✅** | Tỷ lệ stale > 25% | Tươi mới trở lại |
-| **Retrieval Hit Rate** | **{base_hit * 100:.1f}%** | **{corr_hit * 100:.1f}%** | **{rep_hit * 100:.1f}%** | **{delta_hit * 100:+.1f}%** | **{(rep_hit - base_hit) * 100:+.1f}%** |
+| **Retrieval Hit@4** | **{base_hit * 100:.1f}%** | **{corr_hit * 100:.1f}%** | **{rep_hit * 100:.1f}%** | **{delta_hit * 100:+.1f}%** | **{(rep_hit - base_hit) * 100:+.1f}%** |
+| **Retrieval Hit@1** | **{baseline_metrics.get("retrieval_hit_at_1", 0.0) * 100:.1f}%** | **{corrupted_metrics.get("retrieval_hit_at_1", 0.0) * 100:.1f}%** | **{repaired_metrics.get("retrieval_hit_at_1", 0.0) * 100:.1f}%** | **{(corrupted_metrics.get("retrieval_hit_at_1", 0.0) - baseline_metrics.get("retrieval_hit_at_1", 0.0)) * 100:+.1f}%** | **{(repaired_metrics.get("retrieval_hit_at_1", 0.0) - baseline_metrics.get("retrieval_hit_at_1", 0.0)) * 100:+.1f}%** |
 | **Mean Token F1** | **{base_f1:.4f}** | **{corr_f1:.4f}** | **{rep_f1:.4f}** | **{delta_f1:+.4f}** | **{(rep_f1 - base_f1):+.4f}** |
 | **Judge Accuracy** | **{base_acc * 100:.1f}%** | **{corr_acc * 100:.1f}%** | **{rep_acc * 100:.1f}%** | **{delta_acc * 100:+.1f}%** | **{(rep_acc - base_acc) * 100:+.1f}%** |
 | **Mean Judge Score (1-5)** | **{base_score:.2f}** | **{corr_score:.2f}** | **{rep_score:.2f}** | **{corr_score - base_score:+.2f}** | **{rep_score - base_score:+.2f}** |
+
+> **Nguồn chấm Judge:** Baseline {baseline_metrics.get("judge_llm_count", 0)} LLM / {baseline_metrics.get("judge_fallback_count", 0)} heuristic; Corrupted {corrupted_metrics.get("judge_llm_count", 0)} / {corrupted_metrics.get("judge_fallback_count", 0)}; Repaired {repaired_metrics.get("judge_llm_count", 0)} / {repaired_metrics.get("judge_fallback_count", 0)}. Ragas: xem các metrics JSON.
 
 ---
 

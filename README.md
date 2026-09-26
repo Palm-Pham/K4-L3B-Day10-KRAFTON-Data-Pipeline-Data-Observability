@@ -30,3 +30,51 @@
 2. Tích hợp **Freshness Check** (`age_days`) vào Quality Gate
 3. Chạy **Baseline → Corruption → Repair** → xuất bảng đối chiếu 3 trạng thái
 4. **Live Demo** trên bảng & nộp link repo lên VLearn LMS
+
+## Chạy thử retrieval/RAG độc lập
+
+Có thể chạy trước khi hoàn thiện hai pipeline tổng:
+
+```powershell
+.\.venv\Scripts\python.exe script\run_rag.py --rebuild
+.\.venv\Scripts\python.exe script\run_rag.py --question "Who authored 'Data Observability and Quality Gates for Production RAG Systems'?" --top-k 2
+```
+
+Lệnh đầu dựng collection `papers-baseline` từ raw snapshot, các lần sau đọc lại index đã lưu. Thêm `--llm` để tạo câu trả lời từ ngữ cảnh truy xuất bằng provider cấu hình trong `.env`; chế độ mặc định trả lời theo metadata để có thể thử mà không cần API key.
+
+## Đánh giá với golden dataset
+
+`data/eval/test_set.json` có 10 câu hỏi cố định, đủ 4 dạng và bao phủ 10 bài báo. `data/eval/challenge_set.json` có 2 câu không có đáp án; Phase 1 chấm riêng và ghi `data/results/challenge_metrics.json`.
+
+Chạy lại trên PowerShell từ thư mục dự án:
+
+```powershell
+$env:PYTHONPATH = "src"
+$env:PYTHONIOENCODING = "utf-8"
+$env:LLM_PROVIDER = "mock"
+$env:RUN_RAGAS = "0"
+$env:REFRESH_SOURCE = "0"
+$env:REFRESH_TEST_SET = "1"
+.\.venv\Scripts\python.exe script\run_phase1.py
+$env:REFRESH_TEST_SET = "0"
+.\.venv\Scripts\python.exe script\run_corruption_flow.py
+```
+
+`mock` chỉ kiểm tra luồng offline; cột `judge_fallback_count` trong metrics cho biết bao nhiêu câu được chấm bằng heuristic thay vì LLM.
+
+### Gemini golden evaluation
+
+Đặt `GOOGLE_API_KEY` trong `.env` của dự án và giữ `LLM_PROVIDER=gemini`.
+Sau khi tạo baseline index và golden dataset, chạy:
+
+```powershell
+$env:PYTHONPATH = "src"
+$env:PYTHONIOENCODING = "utf-8"
+$env:RUN_RAGAS = "0"
+.\.venv\Scripts\python.exe script/run_llm_evaluation.py
+```
+
+Kết quả câu trả lời do Gemini tạo nằm trong `data/results/llm_baseline_answers.json`;
+metrics ở `data/results/llm_baseline_metrics.json`. Chỉ số judge ghi rõ số câu
+được LLM chấm và số câu phải dùng heuristic dự phòng. Kết quả này không ghi đè
+baseline metadata ở `baseline_*.json`.

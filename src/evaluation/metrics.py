@@ -15,7 +15,7 @@ from core.utils import normalize_whitespace, read_json, write_json
 from retrieval.embeddings import MiniLMEmbeddings
 from retrieval.index import LocalEmbeddingIndex
 from retrieval.llm import build_llm
-from retrieval.qa import answer_question
+from retrieval.qa import answer_question, answer_question_with_llm
 
 
 class JudgeVerdict(BaseModel):
@@ -106,25 +106,38 @@ def evaluate_pipeline(
     test_set_path,
     metrics_output_path,
     answers_output_path,
+    answer_mode: str = "metadata",
 ) -> EvaluationBundle:
+    if answer_mode not in {"metadata", "llm"}:
+        raise ValueError("answer_mode must be 'metadata' or 'llm'.")
+    answer_fn = answer_question_with_llm if answer_mode == "llm" else answer_question
     test_set = read_json(test_set_path)
     answers: list[dict[str, Any]] = []
 
     for item in test_set:
-        result = answer_question(item["question"], settings=settings, index=index)
+        result = answer_fn(item["question"], settings=settings, index=index)
         judge = _judge_answer(settings, item["question"], item["ground_truth"], result.answer)
-        retrieval_hit = any(doc_id in item["ground_truth_doc_ids"] for doc_id in result.retrieved_doc_ids)
+        expected_ids = item["ground_truth_doc_ids"]
+        retrieval_hit = (
+            any(doc_id in expected_ids for doc_id in result.retrieved_doc_ids)
+            if expected_ids else not result.retrieved_doc_ids
+        )
+        retrieval_hit_at_1 = (
+            bool(result.retrieved_doc_ids) and result.retrieved_doc_ids[0] in expected_ids
+        ) if expected_ids else not result.retrieved_doc_ids
         answers.append(
             {
                 "id": item["id"],
                 "question_type": item["question_type"],
                 "question": item["question"],
                 "ground_truth": item["ground_truth"],
-                "ground_truth_doc_ids": item["ground_truth_doc_ids"],
+                "ground_truth_doc_ids": expected_ids,
+                "answerable": bool(expected_ids),
                 "answer": result.answer,
                 "retrieved_doc_ids": result.retrieved_doc_ids,
                 "retrieved_contexts": result.retrieved_contexts,
                 "retrieval_hit": retrieval_hit,
+                "retrieval_hit_at_1": retrieval_hit_at_1,
                 "token_f1": _token_f1(item["ground_truth"], result.answer),
                 "judge": judge.model_dump(),
             }
@@ -132,11 +145,18 @@ def evaluate_pipeline(
 
     summary = {
         "samples": len(answers),
+        "answer_mode": answer_mode,
         "retrieval_hit_rate": mean(1.0 if item["retrieval_hit"] else 0.0 for item in answers),
+        "retrieval_hit_at_1": mean(1.0 if item["retrieval_hit_at_1"] else 0.0 for item in answers),
         "mean_token_f1": mean(item["token_f1"] for item in answers),
         "judge_accuracy": mean(1.0 if item["judge"]["correct"] else 0.0 for item in answers),
         "mean_judge_score": mean(item["judge"]["score"] for item in answers),
     }
+    summary["judge_fallback_count"] = sum(
+        item["judge"]["reasoning"].startswith("Fallback heuristic judge")
+        for item in answers
+    )
+    summary["judge_llm_count"] = len(answers) - summary["judge_fallback_count"]
     summary["ragas"] = _run_ragas(settings, answers)
 
     bundle = EvaluationBundle(summary=summary, answers=answers)

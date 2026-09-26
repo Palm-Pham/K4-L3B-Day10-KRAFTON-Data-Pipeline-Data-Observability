@@ -1,7 +1,7 @@
 # Báo Cáo Pha 1 — Baseline Data Pipeline & Observability
 
-> **Ngày tạo:** 2026-09-26 03:09:06 UTC  
-> **Nguồn dữ liệu:** Crossref REST API  
+> **Ngày tạo:** 2026-09-26
+> **Nguồn dữ liệu:** Crossref REST API
 > **Mục tiêu:** Đo lường hiệu năng Baseline của hệ thống RAG Agent trên dữ liệu học thuật sạch, thiết lập chốt kiểm dịch chất lượng tự động với Great Expectations 1.x và Freshness SLA.
 
 ---
@@ -53,10 +53,13 @@
 | Chỉ số Đánh Giá (Metric) | Kết Quả Baseline | Ngưỡng Kỳ Vọng | Nhận Xét |
 | :--- | :---: | :---: | :--- |
 | **Số câu hỏi benchmark (`samples`)** | 10 | 10 | Đầy đủ 4 dạng nghiệp vụ |
-| **Retrieval Hit Rate** | **100.0%** | ≥ 80.0% | Truy xuất chính xác tài liệu nguồn |
+| **Retrieval Hit@4** | **100.0%** | ≥ 80.0% | Truy xuất chính xác tài liệu nguồn |
+| **Retrieval Hit@1** | **100.0%** | ≥ 80.0% | Đúng tài liệu ở vị trí đầu tiên |
 | **Mean Token F1** | **1.0000** | ≥ 0.7000 | Độ trùng khớp câu trả lời cao |
 | **Judge Accuracy** | **100.0%** | ≥ 80.0% | Câu trả lời đúng chuẩn ngữ nghĩa |
 | **Mean Judge Score (Thang 1-5)** | **5.00 / 5.0** | ≥ 4.0 | Chất lượng phản hồi đồng đều |
+
+> **Nguồn chấm Judge:** 0 câu do LLM chấm; 10 câu dùng heuristic dự phòng. Ragas: Set RUN_RAGAS=1 to enable the slower Ragas pass.
 
 ---
 

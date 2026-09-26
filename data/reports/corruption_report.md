@@ -10,10 +10,13 @@
 | :--- | :---: | :---: | :---: | :---: | :---: |
 | **Data Quality Gate (GX 1.x)** | **PASSED ✅** | **FAILED ❌** | **PASSED ✅** | Vi phạm schema & uniqueness | Khôi phục 100% checks |
 | **Freshness SLA (age ≤ 180d)** | **ĐẠT SLA ✅** | **VI PHẠM ⚠️** | **ĐẠT SLA ✅** | Tỷ lệ stale > 25% | Tươi mới trở lại |
-| **Retrieval Hit Rate** | **100.0%** | **60.0%** | **100.0%** | **-40.0%** | **+0.0%** |
-| **Mean Token F1** | **1.0000** | **0.5741** | **1.0000** | **-0.4259** | **+0.0000** |
-| **Judge Accuracy** | **100.0%** | **60.0%** | **100.0%** | **-40.0%** | **+0.0%** |
-| **Mean Judge Score (1-5)** | **5.00** | **3.20** | **5.00** | **-1.80** | **+0.00** |
+| **Retrieval Hit@4** | **100.0%** | **60.0%** | **100.0%** | **-40.0%** | **+0.0%** |
+| **Retrieval Hit@1** | **100.0%** | **40.0%** | **100.0%** | **-60.0%** | **+0.0%** |
+| **Mean Token F1** | **1.0000** | **0.7788** | **1.0000** | **-0.2212** | **+0.0000** |
+| **Judge Accuracy** | **100.0%** | **80.0%** | **100.0%** | **-20.0%** | **+0.0%** |
+| **Mean Judge Score (1-5)** | **5.00** | **4.00** | **5.00** | **-1.00** | **+0.00** |
+
+> **Nguồn chấm Judge:** Baseline 0 LLM / 10 heuristic; Corrupted 0 / 10; Repaired 0 / 10. Ragas: xem các metrics JSON.
 
 ---
 
@@ -35,8 +38,8 @@ Khi dữ liệu bị tiêm lỗi:
 - **Hệ thống không ném lỗi runtime (No Crash):** Ứng dụng RAG Agent vẫn chạy, vẫn nhận prompt và trả về kết quả 200 OK.
 - **Suy giảm chất lượng ngầm (Silent Degradation):**
   - Retrieval Hit Rate sụt giảm nghiêm trọng từ **100.0%** xuống **60.0%**.
-  - Token F1 giảm từ **1.0000** xuống **0.5741**, phản ánh hiện tượng hallucination hoặc câu trả lời không đầy đủ.
-  - Judge Accuracy giảm mạnh từ **100.0%** xuống **60.0%**.
+  - Token F1 giảm từ **1.0000** xuống **0.7788**, phản ánh hiện tượng hallucination hoặc câu trả lời không đầy đủ.
+  - Judge Accuracy giảm mạnh từ **100.0%** xuống **80.0%**.
 - **Ý nghĩa của Data Observability:** Nhờ có **Great Expectations 1.x Quality Gate** và **Freshness SLA Monitoring**, hệ thống đã lập tức phát hiện các bất thường về tính duy nhất, tính toàn vẹn và độ tươi mới, ngăn chặn dữ liệu bẩn tiếp tục âm thầm phục vụ người dùng.
 
 ---
