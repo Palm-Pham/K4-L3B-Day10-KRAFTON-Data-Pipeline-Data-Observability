@@ -1,56 +1,39 @@
-# Danh Sách Thành Viên & Báo Cáo Phân Công Nhóm
+# TEAM — KRAFTON
 
-- **Tên Nhóm:** `KRAFTON`
-- **Mã Nhóm / Lớp:** `K4-L3B-DAY10`
-- **Tên Repository Nộp Bài:** `K4-L3B-Day10-KRAFTON-Data-Pipeline-Data-Observability`
+- Lớp: K4-L3B-DAY10
+- Repository: K4-L3B-Day10-KRAFTON-Data-Pipeline-Data-Observability
+- Phân công: 5 luồng chính, tỷ trọng đề xuất 20% mỗi người.
 
----
+## Danh sách và phân công
 
-## 1. Danh Sách Thành Viên & Vai Trò
+| STT | Họ và tên | MSSV | Tỷ trọng đề xuất | Phụ trách chính | Bằng chứng cần đối chiếu |
+| ---: | :--- | :--- | ---: | :--- | :--- |
+| 1 | Văn Thành Huy | 2A20262763 | 20% | Ingestion, raw lineage, cleaning | src/ingestion/crossref.py, cleaning.py; data/raw/, data/clean/ |
+| 2 | Võ Đức Tài | 2A202603007 | 20% | GX quality, Freshness SLA, golden evaluation, reporting | src/observability/quality.py, reporting.py, src/evaluation/; data/quality/, data/eval/, data/results/ |
+| 3 | Phan Đình Bảo Khôi | 2A202602434 | 20% | Embedding, Chroma, QA retrieval | src/retrieval/embeddings.py, index.py, qa.py, llm.py; data/chroma/, data/embeddings/ |
+| 4 | Nguyễn Thùy Linh | 2A202602497 | 20% | Corruption suite và repair từ raw snapshot | src/ingestion/corruption.py, src/pipelines/corruption_flow.py; corruption_log.json, repaired artifacts |
+| 5 | Nguyễn Thị Thùy Linh | 2A202602909 | 20% | Orchestration, dashboard và live demo | src/pipelines/phase1.py, script/, dashboard/; kiểm tra end-to-end |
 
-| STT | Họ và tên | MSSV | Email | Vai trò & Phân công công việc | Báo cáo cá nhân |
-|---:|---|---|---|---|---|
-| 1 | Nguyễn Hoàng Nam | 20210001 | nam.nh@vinuni.edu.vn | Trưởng nhóm / Pipeline Integrator (`core/`, `phase1.py`, `corruption_flow.py`) | `report/20210001_NguyenHoangNam.md` |
-| 2 | Trần Quang Minh | 20210002 | minh.tq@vinuni.edu.vn | Data Foundation & Recovery (`crossref.py`, `cleaning.py`, raw data) | `report/20210002_TranQuangMinh.md` |
-| 3 | Lê Thu Hà | 20210003 | ha.lt@vinuni.edu.vn | RAG & Vector Index (`retrieval/index.py`, `embeddings.py`, ChromaDB) | `report/20210003_LeThuHa.md` |
-| 4 | Võ Đức Tài | 2A202603007 | tai.vd@vinuni.edu.vn | Observability & Evaluation (`quality.py` GX 1.x, `testset.py`, reporting) | `report/individual_report.md` / `report/2A202603007_VoDucTai.md` |
+Hai thành viên tên gần giống nhau được phân biệt bằng đầy đủ họ tên và MSSV ở mọi artifact nộp bài.
 
----
+## Ranh giới công việc và bàn giao
 
-## 2. Phần Tự Khai Báo Đóng Góp Chi Tiết Từng Thành Viên
+1. Huy bàn giao raw snapshot và clean schema cho Tài, Bảo Khôi và Nguyễn Thùy Linh.
+2. Bảo Khôi bàn giao ba Chroma collections và API truy xuất cho Tài và Nguyễn Thị Thùy Linh.
+3. Nguyễn Thùy Linh bàn giao corruption log và repaired artifacts cho Tài đánh giá.
+4. Tài khóa golden set 10 câu, quality/freshness reports và bảng metrics.
+5. Nguyễn Thị Thùy Linh tích hợp pipeline baseline và dashboard trình chiếu từ các artifact đã bàn giao.
 
-### 2.1. Nguyễn Hoàng Nam — MSSV: 20210001
-- **Vai trò:** Trưởng nhóm & Điều phối Pipeline (Pipeline Integrator).
-- **Công việc chi tiết đã hoàn thành:**
-  - Thiết lập kiến trúc dự án, cấu hình hệ thống `core/config.py` và đường dẫn artifacts `core/utils.py`.
-  - Kết nối luồng thực thi trong `src/pipelines/phase1.py` và `src/pipelines/corruption_flow.py`.
-  - Kiểm tra tính nhất quán của toàn bộ artifacts dữ liệu và điều phối thực thi chạy end-to-end trên môi trường Conda `e`.
-- **Điều học được / Đóng góp chính:**
-  - Hiểu sâu sắc về thiết kế **Idempotent Pipeline** và cơ chế bảo toàn dữ liệu đa tầng trong hệ thống sản xuất.
+Mỗi luồng cần có review chéo ít nhất một lần để giảm nghẽn khi bàn giao. Người phụ trách báo cáo cần lấy số liệu trực tiếp từ artifact, không tự nhập lại kết quả cũ.
 
-### 2.2. Trần Quang Minh — MSSV: 20210002
-- **Vai trò:** Phụ trách Ingestion, Làm sạch & Phục hồi dữ liệu (Data Foundation & Recovery).
-- **Công việc chi tiết đã hoàn thành:**
-  - Xây dựng module thu thập Crossref API với cơ chế Fallback offline trong `src/ingestion/crossref.py`.
-  - Chuẩn hóa schema, tính toán trường `age_days` và cấu trúc `text_for_embedding` 5 phần trong `src/ingestion/cleaning.py`.
-  - Triển khai kịch bản làm bẩn dữ liệu trong `src/ingestion/corruption.py` và cơ chế Idempotent Repair phục hồi từ raw snapshot.
-- **Điều học được / Đóng góp chính:**
-  - Kỹ thuật truy vết nguồn gốc dữ liệu (**Data Lineage**) và nguyên tắc bảo toàn Raw Snapshot bất biến trước mọi phép biến đổi.
+## Tự xác nhận đóng góp trước khi nộp
 
-### 2.3. Lê Thu Hà — MSSV: 20210003
-- **Vai trò:** Phụ trách RAG, Vector Database & Embedding (Vector Store Specialist).
-- **Công việc chi tiết đã hoàn thành:**
-  - Quản lý mô hình embedding `sentence-transformers/all-MiniLM-L6-v2` với cơ chế local ONNX fallback siêu tốc.
-  - Quản lý và cô lập 3 collection riêng biệt trong ChromaDB (`papers-baseline`, `papers-corrupted`, `papers-repaired`).
-  - Tích hợp QA Agent và LLM Router hỗ trợ Ollama local `qwen2.5:latest`.
-- **Điều học được / Đóng góp chính:**
-  - Cách cô lập không gian vector để đo lường khách quan sự suy giảm ngữ nghĩa giữa dữ liệu sạch và dữ liệu lỗi.
+Bảng trên là phân công cân bằng theo yêu cầu nhóm, chưa thay thế bản tự khai đóng góp thực tế. Mỗi thành viên cần bổ sung báo cáo cá nhân, đối chiếu commit của mình trên nhánh nộp bài và xác nhận phần việc đã hoàn thành. Không dùng thông tin cá nhân hoặc kết quả thử nghiệm mẫu từ bản TEAM cũ.
 
-### 2.4. Võ Đức Tài — MSSV: 2A202603007
-- **Vai trò:** Phụ trách Data Observability & Benchmark Evaluation (Observability & Evaluation Owner).
-- **Công việc chi tiết đã hoàn thành:**
-  - Thiết lập Quality Gate theo chuẩn mới **Great Expectations 1.x** (`ephemeral mode`) và giám sát Freshness SLA trong `src/observability/quality.py`.
-  - Xây dựng bộ câu hỏi đánh giá chuẩn gồm 10 câu hỏi bao phủ 4 nhóm nghiệp vụ trong `src/evaluation/testset.py`.
-  - Xây dựng engine xuất báo cáo tự động Markdown (`reporting.py`) và tạo bảng đối chiếu định lượng 3 trạng thái.
-- **Điều học được / Đóng góp chính:**
-  - Nhận thức rõ hiện tượng **Silent Failure** và cách thức thiết lập hệ thống cảnh báo sớm chặn đứng dữ liệu bẩn trước khi vào serving layer.
+| Thành viên | Xác nhận phần việc thực tế | Báo cáo cá nhân | Commit trên nhánh nộp bài |
+| :--- | :---: | :---: | :---: |
+| Văn Thành Huy | Chờ xác nhận | Chờ bổ sung | Chờ đối chiếu |
+| Võ Đức Tài | Chờ xác nhận | Chờ đối chiếu | Chờ đối chiếu |
+| Phan Đình Bảo Khôi | Chờ xác nhận | Chờ bổ sung | Chờ đối chiếu |
+| Nguyễn Thùy Linh | Chờ xác nhận | Chờ bổ sung | Chờ đối chiếu |
+| Nguyễn Thị Thùy Linh | Chờ xác nhận | Chờ bổ sung | Chờ đối chiếu |
