@@ -39,6 +39,7 @@ def run_data_quality_checks(df: pd.DataFrame, settings: Settings, report_name: s
         expectation_results.append(
             {
                 "expectation_type": exp_config.type if hasattr(exp_config, "type") else str(type(exp_config)),
+                "column": getattr(exp_config, "kwargs", {}).get("column"),
                 "success": bool(item.success),
                 "result": item.result,
             }

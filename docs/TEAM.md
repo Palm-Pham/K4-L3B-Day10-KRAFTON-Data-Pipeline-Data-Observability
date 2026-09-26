@@ -82,5 +82,5 @@ Nội dung dưới đây đã được điền theo tên và công việc của 
 | Văn Thành Huy      |         Đã điền         | Đã điền nội dung |  Chờ cá nhân xác nhận   |
 | Võ Đức Tài         |         Đã điền         | Đã điền nội dung |  Chờ cá nhân xác nhận   |
 | Phan Đình Bảo Khôi |         Đã điền         | Đã điền nội dung |  Chờ cá nhân xác nhận   |
-| Nguyễn Thùy Linh   |         Đã điền         | Đã điền nội dung |  Chờ cá nhân xác nhận   |
+| Nguyễn Thùy Linh   |         Đã điền         | Đã điền nội dung | Đã xác nhận — GitHub: `nalinh1102`, 1 commit trên nhánh nộp bài |
 | Phạm Thị Thùy Linh |         Đã điền         | Đã điền nội dung |  Chờ cá nhân xác nhận   |

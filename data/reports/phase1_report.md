@@ -1,6 +1,6 @@
 # Báo Cáo Pha 1 — Baseline Data Pipeline & Observability
 
-> **Ngày tạo:** 2026-09-26
+> **Ngày tạo:** 2026-09-26 13:39:30 UTC
 > **Nguồn dữ liệu:** Crossref REST API
 > **Mục tiêu:** Đo lường hiệu năng Baseline của hệ thống RAG Agent trên dữ liệu học thuật sạch, thiết lập chốt kiểm dịch chất lượng tự động với Great Expectations 1.x và Freshness SLA.
 
@@ -30,11 +30,11 @@
 #### Chi tiết các Expectations thiết yếu:
 | Expectation Type | Trạng thái |
 | :--- | :---: |
-| `ExpectTableRowCountToBeBetween` | ✅ PASSED |
-| `ExpectColumnValuesToNotBeNull (paper_id)` | ✅ PASSED |
-| `ExpectColumnValuesToNotBeNull (title)` | ✅ PASSED |
-| `ExpectColumnValuesToBeUnique (paper_id)` | ✅ PASSED |
-| `ExpectColumnValueLengthsToBeBetween (title)` | ✅ PASSED |
+| `expect_table_row_count_to_be_between` | ✅ PASSED |
+| `expect_column_values_to_not_be_null (paper_id)` | ✅ PASSED |
+| `expect_column_values_to_be_unique (paper_id)` | ✅ PASSED |
+| `expect_column_values_to_not_be_null (title)` | ✅ PASSED |
+| `expect_column_value_lengths_to_be_between (title)` | ✅ PASSED |
 
 ### 2.2. Freshness SLA Monitoring
 - **Ngưỡng SLA cho phép:** `180 ngày` (Tỷ lệ bài quá hạn ≤ 25%)
@@ -64,4 +64,4 @@
 ---
 
 ## 4. Kết Luận Pha 1
-Dữ liệu đầu vào hoàn toàn hợp lệ, thỏa mãn toàn bộ tiêu chí chốt kiểm dịch chất lượng (GX 1.x) và đạt cam kết độ tươi mới (Freshness SLA). Hệ thống RAG Agent hoạt động ổn định và sẵn sàng cho các bài kiểm thử độ bền (Stress-test & Corruption Simulation).
+Dữ liệu đầu vào **đạt** Quality Gate GX 1.x và **đạt** Freshness SLA. Kết quả trong báo cáo được sinh trực tiếp từ artifact của lần chạy pipeline này.

@@ -31,6 +31,8 @@ def main() -> None:
         )
 
     baseline_metrics = read_json(settings.paths.baseline_metrics)
+    baseline_quality = read_json(settings.paths.baseline_quality_report)
+    baseline_freshness = read_json(settings.paths.freshness_report)
     clean_df = pd.read_json(settings.paths.clean_json)
     print(f"   -> Loaded baseline metrics (Hit Rate: {baseline_metrics['retrieval_hit_rate'] * 100:.1f}%, F1: {baseline_metrics['mean_token_f1']:.4f})")
     print(f"   -> Loaded clean dataset with {len(clean_df)} records.")
@@ -71,6 +73,17 @@ def main() -> None:
     print(f"   -> GX 1.x Quality Gate: {'PASSED ✅' if corrupted_quality['success'] else 'FAILED ❌'}")
     print(f"   -> Freshness SLA      : {'PASSED ✅' if corrupted_freshness['is_fresh'] else 'VIOLATED ⚠️'} (Stale ratio: {corrupted_freshness['stale_ratio'] * 100:.1f}%)")
 
+    repair_reasons = []
+    if not corrupted_quality["success"]:
+        repair_reasons.append("GX quality gate failed")
+    if not corrupted_freshness["is_fresh"]:
+        repair_reasons.append("Freshness SLA was violated")
+    if not repair_reasons:
+        raise RuntimeError(
+            "Corruption suite did not trigger an observability alert; automatic repair was not started."
+        )
+    print(f"   -> Auto-repair triggered: {', '.join(repair_reasons)}")
+
     # 4. Perform Idempotent Repair from Immutable Raw Snapshot
     print("\n🛠️  [4/6] Executing Idempotent Repair from raw snapshot...")
     raw_records = load_raw_records(settings.paths.raw_records_json)
@@ -105,7 +118,7 @@ def main() -> None:
     print(f"   -> Repaired Hit Rate  : {repaired_metrics['retrieval_hit_rate'] * 100:.1f}%")
     print(f"   -> Repaired Token F1   : {repaired_metrics['mean_token_f1']:.4f}")
     print(f"   -> GX 1.x Quality Gate: {'PASSED ✅' if repaired_quality['success'] else 'FAILED ❌'}")
-    print(f"   -> Freshness SLA      : {'PASSED ✅' if repaired_freshness['is_fresh'] else 'PASSED ✅'}")
+    print(f"   -> Freshness SLA      : {'PASSED ✅' if repaired_freshness['is_fresh'] else 'VIOLATED ⚠️'}")
 
     # 6. Generate 3-State Comparison Markdown Report
     print("\n📋 [6/6] Generating 3-State Comparison Report...")
@@ -114,8 +127,10 @@ def main() -> None:
         baseline_metrics=baseline_metrics,
         corrupted_metrics=corrupted_metrics,
         repaired_metrics=repaired_metrics,
+        baseline_quality=baseline_quality,
         corrupted_quality=corrupted_quality,
         repaired_quality=repaired_quality,
+        baseline_freshness=baseline_freshness,
         corrupted_freshness=corrupted_freshness,
         repaired_freshness=repaired_freshness,
     )
@@ -127,8 +142,10 @@ def main() -> None:
     print("=" * 70)
     print(f"{'Chỉ số / Trạng thái':<26} | {'1. Baseline':<12} | {'2. Corrupted':<12} | {'3. Repaired':<12}")
     print("-" * 70)
-    print(f"{'Data Quality Gate (GX 1.x)':<26} | {'PASSED ✅':<12} | {'FAILED ❌':<12} | {'PASSED ✅':<12}")
-    print(f"{'Freshness SLA':<26} | {'ĐẠT SLA ✅':<12} | {'VI PHẠM ⚠️':<12} | {'ĐẠT SLA ✅':<12}")
+    gate = lambda report: "PASSED ✅" if report.get("success") else "FAILED ❌"
+    fresh = lambda report: "ĐẠT SLA ✅" if report.get("is_fresh") else "VI PHẠM ⚠️"
+    print(f"{'Data Quality Gate (GX 1.x)':<26} | {gate(baseline_quality):<12} | {gate(corrupted_quality):<12} | {gate(repaired_quality):<12}")
+    print(f"{'Freshness SLA':<26} | {fresh(baseline_freshness):<12} | {fresh(corrupted_freshness):<12} | {fresh(repaired_freshness):<12}")
     print(f"{'Retrieval Hit Rate':<26} | {baseline_metrics['retrieval_hit_rate']*100:>10.1f}% | {corrupted_metrics['retrieval_hit_rate']*100:>10.1f}% | {repaired_metrics['retrieval_hit_rate']*100:>10.1f}%")
     print(f"{'Mean Token F1':<26} | {baseline_metrics['mean_token_f1']:>11.4f} | {corrupted_metrics['mean_token_f1']:>11.4f} | {repaired_metrics['mean_token_f1']:>11.4f}")
     print(f"{'Judge Accuracy':<26} | {baseline_metrics['judge_accuracy']*100:>10.1f}% | {corrupted_metrics['judge_accuracy']*100:>10.1f}% | {repaired_metrics['judge_accuracy']*100:>10.1f}%")

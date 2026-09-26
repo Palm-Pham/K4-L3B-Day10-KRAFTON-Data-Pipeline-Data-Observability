@@ -60,7 +60,10 @@ Return:
 """.strip()
     try:
         llm = build_llm(settings=settings, temperature=0.0).with_structured_output(JudgeVerdict)
-        return llm.invoke(prompt)
+        verdict = llm.invoke(prompt)
+        if not isinstance(verdict, JudgeVerdict):
+            raise ValueError("LLM judge did not return a valid structured verdict.")
+        return verdict
     except Exception:
         score = 5 if _token_f1(reference, prediction) >= 0.95 else 3 if _token_f1(reference, prediction) >= 0.5 else 1
         return JudgeVerdict(

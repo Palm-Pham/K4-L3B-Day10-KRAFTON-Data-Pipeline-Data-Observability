@@ -53,5 +53,13 @@ def build_llm(settings: Settings, temperature: float = 0.0):
     if provider == "mock":
         from langchain_core.language_models.fake_chat_models import FakeListChatModel
 
-        return FakeListChatModel(responses=["This is a mock response from the scholarly corpus."])
+        class ToolCompatibleFakeChatModel(FakeListChatModel):
+            """Offline fake model that supports the agent tool-binding interface."""
+
+            def bind_tools(self, tools, **kwargs):  # noqa: ANN001, ANN003
+                return self
+
+        return ToolCompatibleFakeChatModel(
+            responses=["This is a mock response from the scholarly corpus."]
+        )
     raise RuntimeError(f"Unsupported LLM provider: {settings.llm_provider}")

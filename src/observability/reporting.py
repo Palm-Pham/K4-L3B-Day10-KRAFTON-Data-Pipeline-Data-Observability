@@ -17,6 +17,20 @@ def generate_phase1_report(
     path = Path(report_path)
     ensure_parent(path)
 
+    def expectation_label(item: dict[str, Any]) -> str:
+        label = item.get("expectation_type", "UnknownExpectation")
+        if item.get("column"):
+            label += f" ({item['column']})"
+        return label
+
+    expectation_rows = "\n".join(
+        f"| `{expectation_label(item)}` | "
+        f"{'✅ PASSED' if item.get('success') else '❌ FAILED'} |"
+        for item in quality.get("results", [])
+    )
+    if not expectation_rows:
+        expectation_rows = "| `Không có kết quả` | ❌ FAILED |"
+
     md = f"""# Báo Cáo Pha 1 — Baseline Data Pipeline & Observability
 
 > **Ngày tạo:** {source_summary.get("timestamp", "N/A")}
@@ -49,11 +63,7 @@ def generate_phase1_report(
 #### Chi tiết các Expectations thiết yếu:
 | Expectation Type | Trạng thái |
 | :--- | :---: |
-| `ExpectTableRowCountToBeBetween` | ✅ PASSED |
-| `ExpectColumnValuesToNotBeNull (paper_id)` | ✅ PASSED |
-| `ExpectColumnValuesToNotBeNull (title)` | ✅ PASSED |
-| `ExpectColumnValuesToBeUnique (paper_id)` | ✅ PASSED |
-| `ExpectColumnValueLengthsToBeBetween (title)` | ✅ PASSED |
+{expectation_rows}
 
 ### 2.2. Freshness SLA Monitoring
 - **Ngưỡng SLA cho phép:** `{freshness.get("threshold_days", 180)} ngày` (Tỷ lệ bài quá hạn ≤ 25%)
@@ -83,7 +93,7 @@ def generate_phase1_report(
 ---
 
 ## 4. Kết Luận Pha 1
-Dữ liệu đầu vào hoàn toàn hợp lệ, thỏa mãn toàn bộ tiêu chí chốt kiểm dịch chất lượng (GX 1.x) và đạt cam kết độ tươi mới (Freshness SLA). Hệ thống RAG Agent hoạt động ổn định và sẵn sàng cho các bài kiểm thử độ bền (Stress-test & Corruption Simulation).
+Dữ liệu đầu vào **{'đạt' if quality.get('success') else 'không đạt'}** Quality Gate GX 1.x và **{'đạt' if freshness.get('is_fresh') else 'vi phạm'}** Freshness SLA. Kết quả trong báo cáo được sinh trực tiếp từ artifact của lần chạy pipeline này.
 """
     write_text(path, md.strip() + "\n")
 
@@ -93,8 +103,10 @@ def generate_corruption_report(
     baseline_metrics: dict[str, Any],
     corrupted_metrics: dict[str, Any],
     repaired_metrics: dict[str, Any],
+    baseline_quality: dict[str, Any],
     corrupted_quality: dict[str, Any],
     repaired_quality: dict[str, Any],
+    baseline_freshness: dict[str, Any],
     corrupted_freshness: dict[str, Any],
     repaired_freshness: dict[str, Any],
 ) -> None:
@@ -122,6 +134,12 @@ def generate_corruption_report(
     delta_f1 = corr_f1 - base_f1
     delta_acc = corr_acc - base_acc
 
+    def gate_label(report: dict[str, Any]) -> str:
+        return "PASSED ✅" if report.get("success") else "FAILED ❌"
+
+    def freshness_label(report: dict[str, Any]) -> str:
+        return "ĐẠT SLA ✅" if report.get("is_fresh") else "VI PHẠM ⚠️"
+
     md = f"""# Báo Cáo Đối Chiếu 3 Trạng Thái — Data Pipeline, Observability & RAG Resilience
 
 > **Mục tiêu:** Chứng minh năng lực phát hiện sớm sự suy giảm chất lượng dữ liệu (Data Observability), phân tích hiện tượng **Silent Failure** của RAG Agent khi dữ liệu bị lỗi, và kiểm chứng cơ chế tự phục hồi an toàn (**Idempotent Repair**).
@@ -132,8 +150,8 @@ def generate_corruption_report(
 
 | Chỉ số / Metric | 1. Baseline (Sạch) | 2. Corrupted (Lỗi) | 3. Repaired (Phục hồi) | Tác Động Khi Lỗi (Corrupted vs Base) | Mức Độ Khôi Phục (Repaired vs Base) |
 | :--- | :---: | :---: | :---: | :---: | :---: |
-| **Data Quality Gate (GX 1.x)** | **PASSED ✅** | **FAILED ❌** | **PASSED ✅** | Vi phạm schema & uniqueness | Khôi phục 100% checks |
-| **Freshness SLA (age ≤ 180d)** | **ĐẠT SLA ✅** | **VI PHẠM ⚠️** | **ĐẠT SLA ✅** | Tỷ lệ stale > 25% | Tươi mới trở lại |
+| **Data Quality Gate (GX 1.x)** | **{gate_label(baseline_quality)}** | **{gate_label(corrupted_quality)}** | **{gate_label(repaired_quality)}** | {corrupted_quality.get('successful_expectations', 0)}/{corrupted_quality.get('evaluated_expectations', 0)} checks đạt | {repaired_quality.get('successful_expectations', 0)}/{repaired_quality.get('evaluated_expectations', 0)} checks đạt |
+| **Freshness SLA (age ≤ 180d)** | **{freshness_label(baseline_freshness)}** | **{freshness_label(corrupted_freshness)}** | **{freshness_label(repaired_freshness)}** | {corrupted_freshness.get('stale_ratio', 0.0) * 100:.1f}% stale | {repaired_freshness.get('stale_ratio', 0.0) * 100:.1f}% stale |
 | **Retrieval Hit@4** | **{base_hit * 100:.1f}%** | **{corr_hit * 100:.1f}%** | **{rep_hit * 100:.1f}%** | **{delta_hit * 100:+.1f}%** | **{(rep_hit - base_hit) * 100:+.1f}%** |
 | **Retrieval Hit@1** | **{baseline_metrics.get("retrieval_hit_at_1", 0.0) * 100:.1f}%** | **{corrupted_metrics.get("retrieval_hit_at_1", 0.0) * 100:.1f}%** | **{repaired_metrics.get("retrieval_hit_at_1", 0.0) * 100:.1f}%** | **{(corrupted_metrics.get("retrieval_hit_at_1", 0.0) - baseline_metrics.get("retrieval_hit_at_1", 0.0)) * 100:+.1f}%** | **{(repaired_metrics.get("retrieval_hit_at_1", 0.0) - baseline_metrics.get("retrieval_hit_at_1", 0.0)) * 100:+.1f}%** |
 | **Mean Token F1** | **{base_f1:.4f}** | **{corr_f1:.4f}** | **{rep_f1:.4f}** | **{delta_f1:+.4f}** | **{(rep_f1 - base_f1):+.4f}** |

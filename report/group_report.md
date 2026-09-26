@@ -46,7 +46,7 @@ Crossref API khi bật refresh, hoặc data/raw/crossref_response.json khi chạ
 → QA và golden evaluation
 → báo cáo baseline.
 
-Corruption flow lấy dữ liệu sạch, tiêm 6 lỗi và đánh giá lại. Sau đó pipeline đọc raw snapshot, làm sạch, tái tạo collection repaired rồi chạy cùng golden set. Việc repair nằm trong luồng chạy thủ công; hiện chưa có cơ chế tự kích hoạt repair từ tín hiệu GX.
+Corruption flow lấy dữ liệu sạch, tiêm 6 lỗi và đánh giá lại. Khi GX Quality Gate thất bại hoặc Freshness SLA bị vi phạm, pipeline tự động kích hoạt repair từ raw snapshot, tái tạo collection repaired rồi chạy lại cùng golden set. Nếu corruption không tạo ra cảnh báo observability, pipeline dừng thay vì tuyên bố đã tự phục hồi.
 
 Bằng chứng nguồn: [raw response](../data/raw/crossref_response.json), [raw records](../data/raw/crossref_records.json), [clean dataset](../data/clean/papers_clean.json), [Chroma manifest](../data/embeddings/papers_embeddings.json).
 

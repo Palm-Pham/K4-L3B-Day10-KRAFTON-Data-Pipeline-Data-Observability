@@ -1,6 +1,8 @@
 from __future__ import annotations
 
 from functools import lru_cache
+from pathlib import Path
+import tempfile
 from typing import Any
 
 from chromadb.utils.embedding_functions import ONNXMiniLM_L6_V2
@@ -17,7 +19,18 @@ def _load_model(model_name: str) -> Any:
 
     try:
         # Use offline Chroma built-in ONNX implementation of all-MiniLM-L6-v2
-        return ONNXMiniLM_L6_V2()
+        model = ONNXMiniLM_L6_V2()
+        try:
+            Path(model.DOWNLOAD_PATH).mkdir(parents=True, exist_ok=True)
+        except OSError:
+            model.DOWNLOAD_PATH = (
+                Path(tempfile.gettempdir())
+                / "day10-data-observability"
+                / "chroma"
+                / "onnx_models"
+                / model.MODEL_NAME
+            )
+        return model
     except Exception:
         from sentence_transformers import SentenceTransformer
         return SentenceTransformer(model_name)

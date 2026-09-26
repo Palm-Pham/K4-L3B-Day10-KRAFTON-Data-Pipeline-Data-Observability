@@ -46,7 +46,7 @@ Bàn giao lệnh chạy và kịch bản trình bày: mở dashboard, giải th�
 
 ## 6. Giới hạn và câu hỏi thuyết trình
 
-**Giới hạn:** Dashboard là công cụ demo cục bộ, không phải hệ thống giám sát liên tục. Kết quả Gemini thật chưa có; quality gate hiện báo lỗi nhưng chưa tự kích hoạt repair.
+**Giới hạn:** Dashboard là công cụ demo cục bộ, không phải hệ thống giám sát liên tục. Kết quả Gemini thật chưa có; auto-repair được kích hoạt trong corruption flow khi GX hoặc Freshness phát cảnh báo.
 
 **Câu hỏi có thể gặp:** Nếu được hỏi vì sao cần orchestration: thứ tự và schema artifact phải ổn định để baseline, corrupted và repaired dùng cùng golden set; nếu đổi câu hỏi giữa các trạng thái thì không còn phép so sánh công bằng.
 

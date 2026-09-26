@@ -8,8 +8,8 @@
 
 | Chỉ số / Metric | 1. Baseline (Sạch) | 2. Corrupted (Lỗi) | 3. Repaired (Phục hồi) | Tác Động Khi Lỗi (Corrupted vs Base) | Mức Độ Khôi Phục (Repaired vs Base) |
 | :--- | :---: | :---: | :---: | :---: | :---: |
-| **Data Quality Gate (GX 1.x)** | **PASSED ✅** | **FAILED ❌** | **PASSED ✅** | Vi phạm schema & uniqueness | Khôi phục 100% checks |
-| **Freshness SLA (age ≤ 180d)** | **ĐẠT SLA ✅** | **VI PHẠM ⚠️** | **ĐẠT SLA ✅** | Tỷ lệ stale > 25% | Tươi mới trở lại |
+| **Data Quality Gate (GX 1.x)** | **PASSED ✅** | **FAILED ❌** | **PASSED ✅** | 3/5 checks đạt | 5/5 checks đạt |
+| **Freshness SLA (age ≤ 180d)** | **ĐẠT SLA ✅** | **VI PHẠM ⚠️** | **ĐẠT SLA ✅** | 50.0% stale | 4.2% stale |
 | **Retrieval Hit@4** | **100.0%** | **60.0%** | **100.0%** | **-40.0%** | **+0.0%** |
 | **Retrieval Hit@1** | **100.0%** | **40.0%** | **100.0%** | **-60.0%** | **+0.0%** |
 | **Mean Token F1** | **1.0000** | **0.7788** | **1.0000** | **-0.2212** | **+0.0000** |
