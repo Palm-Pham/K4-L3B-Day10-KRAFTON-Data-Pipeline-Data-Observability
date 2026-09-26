@@ -1,0 +1,133 @@
+<!doctype html>
+<html lang="vi">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#0b1220">
+  <title>KRAFTON · Data observability live</title>
+  <link rel="stylesheet" href="/styles.css">
+  <script src="/app.js" defer></script>
+</head>
+<body>
+  <a class="skip" href="#main">Đến nội dung chính</a>
+  <div class="shell">
+    <aside class="sidebar" aria-label="Điều hướng">
+      <a class="brand" href="#overview" aria-label="KRAFTON, về tổng quan">
+        <span class="brand-mark" aria-hidden="true"><span></span><span></span><span></span></span>
+        <span>KRAFTON<small>DATA LAB / DAY 10</small></span>
+      </a>
+      <div class="side-label">PRESENTATION MODE</div>
+      <nav>
+        <a href="#overview" class="nav-link active"><span class="nav-dot"></span>Tổng quan</a>
+        <a href="#comparison" class="nav-link"><span class="nav-dot"></span>Tác động dữ liệu lỗi</a>
+        <a href="#pipeline" class="nav-link"><span class="nav-dot"></span>Pipeline & quality</a>
+        <a href="#demo" class="nav-link"><span class="nav-dot"></span>Live retrieval</a>
+      </nav>
+      <div class="sidebar-bottom">
+        <div class="status-line"><span class="pulse"></span> LOCAL DEMO READY</div>
+        <p>Dữ liệu từ các file artifact đang lưu trong dự án. Không cần kết nối internet.</p>
+      </div>
+    </aside>
+
+    <main id="main">
+      <header class="topbar">
+        <div class="breadcrumb">PROJECT / <strong>OBSERVABILITY OVERVIEW</strong></div>
+        <div class="top-actions">
+          <span class="top-chip">24 PAPERS · 10 GOLDEN QUESTIONS</span>
+          <a class="top-link" href="#demo">Mở live demo <span aria-hidden="true">↗</span></a>
+        </div>
+      </header>
+
+      <div class="content">
+        <section id="overview" class="hero section">
+          <div class="hero-copy">
+            <div class="eyebrow"><span class="eyebrow-line"></span> DATA PIPELINE / RAG RESILIENCE</div>
+            <h1>Nhìn thấy lỗi dữ liệu.<br><em>Đo được tác động.</em><br>Phục hồi có bằng chứng.</h1>
+            <p>Từ Crossref đến câu trả lời RAG: một luồng quan sát được, có benchmark cố định và bản raw snapshot để phục hồi.</p>
+            <div class="hero-actions">
+              <a class="button primary" href="#comparison">Xem kết quả đối chiếu <span aria-hidden="true">→</span></a>
+              <a class="button ghost" href="#demo">Thử câu hỏi trực tiếp</a>
+            </div>
+          </div>
+          <div class="hero-visual" aria-label="Minh họa ba trạng thái baseline, corrupted và repaired">
+            <div class="visual-head"><span>EXPERIMENT / 03 STATES</span><span class="visual-dots">•••</span></div>
+            <div class="visual-grid">
+              <div class="visual-node clean"><span class="node-number">01</span><strong>BASELINE</strong><span>Clean index</span><b id="hero-base">—</b></div>
+              <div class="visual-connector" aria-hidden="true"><span>→</span><small>6 faults</small></div>
+              <div class="visual-node damaged"><span class="node-number">02</span><strong>CORRUPTED</strong><span>Silent degradation</span><b id="hero-corrupt">—</b></div>
+              <div class="visual-connector" aria-hidden="true"><span>→</span><small>restore</small></div>
+              <div class="visual-node restored"><span class="node-number">03</span><strong>REPAIRED</strong><span>From raw snapshot</span><b id="hero-repair">—</b></div>
+            </div>
+            <div class="visual-foot"><span>RETRIEVAL HIT@1</span><span>GOLDEN SET / 10 QUESTIONS</span></div>
+          </div>
+        </section>
+
+        <section class="metric-strip" aria-label="Chỉ số nổi bật">
+          <article class="metric-card"><span class="metric-label">CLEAN CORPUS</span><div><strong id="corpus-count">—</strong><span>papers</span></div><p>Crossref snapshot</p></article>
+          <article class="metric-card"><span class="metric-label">BASELINE HIT@1</span><div><strong id="base-hit">—</strong><span>/ 10</span></div><p>Golden questions</p></article>
+          <article class="metric-card"><span class="metric-label">CORRUPTED HIT@1</span><div><strong id="corrupt-hit">—</strong><span>/ 10</span></div><p>Độ suy giảm truy xuất</p></article>
+          <article class="metric-card"><span class="metric-label">QUALITY GATE</span><div><strong id="quality-status">—</strong></div><p>GX 1.x · baseline</p></article>
+        </section>
+
+        <section id="comparison" class="section comparison-section">
+          <div class="section-heading"><div><div class="eyebrow">01 / EXPERIMENT</div><h2>Một benchmark, ba trạng thái</h2><p>Chọn chỉ số để xem hệ thống thay đổi khi dữ liệu bị làm bẩn và phục hồi.</p></div><div class="metric-switch" role="group" aria-label="Chỉ số biểu đồ"><button class="switch active" data-metric="retrieval_hit_at_1" type="button">Hit@1</button><button class="switch" data-metric="retrieval_hit_rate" type="button">Hit@4</button><button class="switch" data-metric="mean_token_f1" type="button">Token F1</button></div></div>
+          <div class="comparison-layout">
+            <div class="chart-panel">
+              <div class="panel-top"><span>BENCHMARK COMPARISON</span><span id="chart-unit">RETRIEVAL HIT@1</span></div>
+              <div id="chart" class="bar-chart" role="img" aria-label="Biểu đồ so sánh baseline, corrupted và repaired"></div>
+              <div class="chart-axis"><span>0%</span><span>25%</span><span>50%</span><span>75%</span><span>100%</span></div>
+              <p class="chart-note" id="chart-note">Đang tải dữ liệu đánh giá…</p>
+            </div>
+            <div class="insight-panel">
+              <span class="insight-index">THE OBSERVABILITY STORY</span>
+              <h3>Pipeline vẫn chạy.<br><span>Chất lượng đã đổi.</span></h3>
+              <p>Quality Gate và Freshness SLA phát hiện dữ liệu lỗi; benchmark cho thấy tác động thực tế lên retrieval.</p>
+              <div class="insight-stat"><strong id="drop-stat">—</strong><span>điểm phần trăm Hit@1<br>khi dữ liệu bị lỗi</span></div>
+              <div class="insight-foot">Kết quả tính từ artifact hiện tại · không phải số liệu minh họa</div>
+            </div>
+          </div>
+          <div class="caveat">Lưu ý khi thuyết trình: baseline QA dùng câu trả lời trích xuất từ metadata; judge hiện dùng heuristic. Kết quả Gemini thật được đánh giá riêng khi cấu hình API key.</div>
+        </section>
+
+        <section id="pipeline" class="section pipeline-section">
+          <div class="section-heading"><div><div class="eyebrow">02 / DATA LINEAGE</div><h2>Từ nguồn thô đến phục hồi</h2><p>Mỗi bước có artifact để đối chiếu khi trình bày luồng dữ liệu.</p></div></div>
+          <div class="pipeline-grid">
+            <div class="flow-card"><span class="flow-no">01</span><div class="flow-icon" aria-hidden="true">◎</div><h3>Ingestion</h3><p>Crossref API hoặc local snapshot</p><code>data/raw/</code></div>
+            <div class="flow-card"><span class="flow-no">02</span><div class="flow-icon" aria-hidden="true">≋</div><h3>Cleaning</h3><p>Chuẩn hóa và khử trùng lặp</p><code>data/clean/</code></div>
+            <div class="flow-card"><span class="flow-no">03</span><div class="flow-icon" aria-hidden="true">◉</div><h3>Indexing</h3><p>MiniLM + Chroma collections</p><code>data/chroma/</code></div>
+            <div class="flow-card"><span class="flow-no">04</span><div class="flow-icon" aria-hidden="true">⌁</div><h3>Observability</h3><p>GX quality + freshness SLA</p><code>data/quality/</code></div>
+            <div class="flow-card"><span class="flow-no">05</span><div class="flow-icon" aria-hidden="true">↺</div><h3>Repair</h3><p>Tái tạo từ raw snapshot</p><code>data/reports/</code></div>
+          </div>
+          <div class="quality-grid" id="quality-grid"></div>
+          <div class="scenario-heading"><span>SIX INJECTED FAILURE MODES</span><span>FROM CORRUPTION LOG</span></div>
+          <div class="scenario-grid" id="scenario-grid"></div>
+        </section>
+
+        <section id="demo" class="section demo-section">
+          <div class="section-heading"><div><div class="eyebrow">03 / LIVE DEMO</div><h2>Hỏi trực tiếp trên corpus</h2><p>Chuyển trạng thái để thấy cùng một câu hỏi có thể trả về nguồn khác nhau.</p></div><span class="demo-badge"><span class="pulse"></span> LOCAL RETRIEVAL</span></div>
+          <div class="demo-layout">
+            <div class="demo-form-panel">
+              <div class="field-label">CHỌN TRẠNG THÁI DỮ LIỆU</div>
+              <div class="state-control" role="group" aria-label="Trạng thái dữ liệu"><button type="button" class="state-button selected" data-state="baseline">Baseline</button><button type="button" class="state-button" data-state="corrupted">Corrupted</button><button type="button" class="state-button" data-state="repaired">Repaired</button></div>
+              <form id="ask-form">
+                <label for="question">Câu hỏi</label>
+                <textarea id="question" name="question" maxlength="500" rows="4" placeholder="Ví dụ: What problem do static benchmarks create for enterprise knowledge bases?" required></textarea>
+                <button class="button primary ask-button" type="submit">Truy xuất & trả lời <span aria-hidden="true">→</span></button>
+              </form>
+              <div class="field-label sample-label">THỬ NHANH VỚI GOLDEN SET</div>
+              <div id="samples" class="samples"></div>
+            </div>
+            <div class="answer-panel">
+              <div class="answer-head"><span>RAG RESPONSE</span><span id="answer-mode">METADATA MODE</span></div>
+              <div id="answer-content" class="answer-content" aria-live="polite"><span class="answer-placeholder">Câu trả lời và DOI nguồn sẽ xuất hiện tại đây.</span></div>
+              <div id="answer-sources" class="sources"></div>
+            </div>
+          </div>
+        </section>
+        <footer><span>KRAFTON / DATA OBSERVABILITY LAB</span><span>Local presentation dashboard · artifact backed</span></footer>
+      </div>
+    </main>
+  </div>
+  <div id="load-error" class="error-toast" role="alert" hidden></div>
+</body>
+</html>

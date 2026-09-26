@@ -78,3 +78,19 @@ Kết quả câu trả lời do Gemini tạo nằm trong `data/results/llm_basel
 metrics ở `data/results/llm_baseline_metrics.json`. Chỉ số judge ghi rõ số câu
 được LLM chấm và số câu phải dùng heuristic dự phòng. Kết quả này không ghi đè
 baseline metadata ở `baseline_*.json`.
+
+## Dashboard thuyết trình cục bộ
+
+Dashboard đọc trực tiếp các metrics, quality reports và corruption log đang có.
+Chạy từ thư mục dự án bằng Python trong virtual environment:
+
+```powershell
+$env:PYTHONPATH = "src"
+$env:PYTHONIOENCODING = "utf-8"
+.\.venv\Scripts\python.exe script/run_dashboard.py
+```
+
+Mở [http://127.0.0.1:8765](http://127.0.0.1:8765). Phần Live retrieval
+dùng QA metadata trên ba Chroma collections và hoạt động không cần API key.
+Để có số liệu mới trước khi thuyết trình, chạy lại Phase 1 và corruption flow
+theo lệnh phía trên rồi tải lại trang. Dashboard chỉ nghe trên localhost.
