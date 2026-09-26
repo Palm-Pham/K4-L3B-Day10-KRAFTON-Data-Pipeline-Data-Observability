@@ -26,6 +26,8 @@ Mỗi người sở hữu một luồng chính, có đầu vào, đầu ra và m
 | 4 | Nguyễn Thùy Linh / 2A202602497 | 20% | Corruption suite và repair từ raw snapshot | src/ingestion/corruption.py, src/pipelines/corruption_flow.py; corruption_log.json, repaired artifacts |
 | 5 | Nguyễn Thị Thùy Linh / 2A202602909 | 20% | Orchestration, dashboard và live demo | src/pipelines/phase1.py, script/, dashboard/; kiểm tra end-to-end và trình bày |
 
+Bản nháp cá nhân theo phân công: [Văn Thành Huy](2A20262763_VanThanhHuy.md) · [Võ Đức Tài](2A202603007_VoDucTai.md) · [Phan Đình Bảo Khôi](2A202602434_PhanDinhBaoKhoi.md) · [Nguyễn Thùy Linh](2A202602497_NguyenThuyLinh.md) · [Nguyễn Thị Thùy Linh](2A202602909_NguyenThiThuyLinh.md).
+
 ### Điểm bàn giao giữa các luồng
 
 1. Huy bàn giao raw snapshot và clean schema cho Tài, Bảo Khôi và Nguyễn Thùy Linh.
@@ -93,7 +95,8 @@ Cài dependencies theo requirements.txt hoặc pyproject.toml. Từ thư mục g
 - [x] Artifact raw, clean, Chroma, quality, metrics và hai báo cáo pipeline có trong repository.
 - [x] Ba trạng thái dùng chung golden set cố định; số liệu bảng trên khớp artifact hiện tại.
 - [x] Điền tên và MSSV của đủ 5 người, đồng bộ với docs/TEAM.md.
-- [ ] Từng người xác nhận đóng góp thực tế và hoàn thiện báo cáo cá nhân.
+- [x] Đã tạo 5 bản nháp báo cáo cá nhân theo phân công.
+- [ ] Từng người xác nhận đóng góp thực tế, commit và chỉnh bản nháp trước khi nộp.
 - [ ] Chạy lại hai pipeline trên máy nộp bài, lưu log/ảnh minh chứng.
 - [ ] Kiểm tra mỗi người có commit trên nhánh nộp bài và tự nộp link repository lên LMS.
 - [ ] Chạy Gemini evaluation nếu thuyết trình kết quả LLM thật; tuyệt đối không commit .env hoặc API key.

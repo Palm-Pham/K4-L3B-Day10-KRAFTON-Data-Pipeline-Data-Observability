@@ -26,14 +26,61 @@ Hai thành viên tên gần giống nhau được phân biệt bằng đầy đ�
 
 Mỗi luồng cần có review chéo ít nhất một lần để giảm nghẽn khi bàn giao. Người phụ trách báo cáo cần lấy số liệu trực tiếp từ artifact, không tự nhập lại kết quả cũ.
 
-## Tự xác nhận đóng góp trước khi nộp
+## Nội dung tự khai theo phân công
 
-Bảng trên là phân công cân bằng theo yêu cầu nhóm, chưa thay thế bản tự khai đóng góp thực tế. Mỗi thành viên cần bổ sung báo cáo cá nhân, đối chiếu commit của mình trên nhánh nộp bài và xác nhận phần việc đã hoàn thành. Không dùng thông tin cá nhân hoặc kết quả thử nghiệm mẫu từ bản TEAM cũ.
+Nội dung dưới đây đã được điền theo tên và công việc của từng thành viên. Đây là phạm vi được giao, không phải bằng chứng rằng cá nhân đã tự viết mã. Mỗi người cần kiểm tra và sửa bản báo cáo cá nhân trước khi nộp.
 
-| Thành viên | Xác nhận phần việc thực tế | Báo cáo cá nhân | Commit trên nhánh nộp bài |
+### Văn Thành Huy — 2A20262763
+
+- Vai trò: Ingestion, raw lineage và cleaning (20% phân công đề xuất).
+- Phần việc: Kiểm tra parse DOI, tiêu đề, abstract, tác giả, chủ đề và ngày xuất bản trong src/ingestion/crossref.py.
+- Phần việc: Duy trì hai raw artifacts và fallback local khi không tải được payload mới.
+- Phần việc: Chuẩn hóa JATS/whitespace, bỏ DOI trùng, tính age_days và tạo text_for_embedding trong src/ingestion/cleaning.py.
+- Bàn giao: Bàn giao schema sạch và raw snapshot cho index, quality checks và repair.
+- Báo cáo cá nhân: [report/2A20262763_VanThanhHuy.md](../report/2A20262763_VanThanhHuy.md).
+
+### Võ Đức Tài — 2A202603007
+
+- Vai trò: GX quality, Freshness SLA, golden evaluation và reporting (20% phân công đề xuất).
+- Phần việc: Kiểm tra 5 Great Expectations và Freshness SLA trong src/observability/quality.py.
+- Phần việc: Giữ golden set 10 câu, challenge set 2 câu và tính Hit@1, Hit@4, Token F1 trong src/evaluation/.
+- Phần việc: Đối chiếu báo cáo pha 1, corruption report và bảng số liệu trong src/observability/reporting.py.
+- Bàn giao: Bàn giao quality/freshness signal, golden set và metrics cho dashboard/demo.
+- Báo cáo cá nhân: [report/2A202603007_VoDucTai.md](../report/2A202603007_VoDucTai.md).
+
+### Phan Đình Bảo Khôi — 2A202602434
+
+- Vai trò: Embedding, Chroma index và QA retrieval (20% phân công đề xuất).
+- Phần việc: Kiểm tra MiniLM embeddings và fallback local trong src/retrieval/embeddings.py.
+- Phần việc: Quản lý ba Chroma collections, đối sánh DOI/tiêu đề và BM25 rerank trong src/retrieval/index.py.
+- Phần việc: Kiểm tra QA metadata và chế độ LLM có trích dẫn DOI trong src/retrieval/qa.py, llm.py.
+- Bàn giao: Bàn giao hàm truy xuất và ba index cho evaluation và live demo.
+- Báo cáo cá nhân: [report/2A202602434_PhanDinhBaoKhoi.md](../report/2A202602434_PhanDinhBaoKhoi.md).
+
+### Nguyễn Thùy Linh — 2A202602497
+
+- Vai trò: Corruption suite và repair từ raw snapshot (20% phân công đề xuất).
+- Phần việc: Rà 6 kịch bản drop records, blank summary, inject noise, truncate title, stale date và duplicate rows trong src/ingestion/corruption.py.
+- Phần việc: Đối chiếu corruption log, dữ liệu lỗi và quality/freshness alerts.
+- Phần việc: Kiểm tra luồng tái tạo cleaned data và Chroma repaired từ raw snapshot trong src/pipelines/corruption_flow.py.
+- Bàn giao: Bàn giao corrupted/repaired artifacts để chấm trên cùng golden set và tạo bảng so sánh.
+- Báo cáo cá nhân: [report/2A202602497_NguyenThuyLinh.md](../report/2A202602497_NguyenThuyLinh.md).
+
+### Nguyễn Thị Thùy Linh — 2A202602909
+
+- Vai trò: Orchestration, dashboard và live demo (20% phân công đề xuất).
+- Phần việc: Kiểm tra thứ tự ingest → clean → index → evaluate → report trong src/pipelines/phase1.py.
+- Phần việc: Chạy luồng corruption/repair và đối chiếu artifact cuối cùng; kết nối các phần việc qua script/.
+- Phần việc: Chuẩn bị dashboard/ và kịch bản trình bày baseline, corrupted, repaired cùng live retrieval.
+- Bàn giao: Tích hợp các artifact đã khóa từ bốn luồng còn lại để demo nhất quán.
+- Báo cáo cá nhân: [report/2A202602909_NguyenThiThuyLinh.md](../report/2A202602909_NguyenThiThuyLinh.md).
+
+## Xác nhận trước khi nộp
+
+| Thành viên | Nội dung theo phân công | Báo cáo cá nhân | Commit/đóng góp thực tế |
 | :--- | :---: | :---: | :---: |
-| Văn Thành Huy | Chờ xác nhận | Chờ bổ sung | Chờ đối chiếu |
-| Võ Đức Tài | Chờ xác nhận | Chờ đối chiếu | Chờ đối chiếu |
-| Phan Đình Bảo Khôi | Chờ xác nhận | Chờ bổ sung | Chờ đối chiếu |
-| Nguyễn Thùy Linh | Chờ xác nhận | Chờ bổ sung | Chờ đối chiếu |
-| Nguyễn Thị Thùy Linh | Chờ xác nhận | Chờ bổ sung | Chờ đối chiếu |
+| Văn Thành Huy | Đã điền | Bản nháp đã tạo | Chờ cá nhân xác nhận |
+| Võ Đức Tài | Đã điền | Bản nháp đã tạo | Chờ cá nhân xác nhận |
+| Phan Đình Bảo Khôi | Đã điền | Bản nháp đã tạo | Chờ cá nhân xác nhận |
+| Nguyễn Thùy Linh | Đã điền | Bản nháp đã tạo | Chờ cá nhân xác nhận |
+| Nguyễn Thị Thùy Linh | Đã điền | Bản nháp đã tạo | Chờ cá nhân xác nhận |
