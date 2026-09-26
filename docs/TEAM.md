@@ -6,23 +6,23 @@
 
 ## Danh sách và phân công
 
-| STT | Họ và tên | MSSV | Tỷ trọng đề xuất | Phụ trách chính | Bằng chứng cần đối chiếu |
-| ---: | :--- | :--- | ---: | :--- | :--- |
-| 1 | Văn Thành Huy | 2A20262763 | 20% | Ingestion, raw lineage, cleaning | src/ingestion/crossref.py, cleaning.py; data/raw/, data/clean/ |
-| 2 | Võ Đức Tài | 2A202603007 | 20% | GX quality, Freshness SLA, golden evaluation, reporting | src/observability/quality.py, reporting.py, src/evaluation/; data/quality/, data/eval/, data/results/ |
-| 3 | Phan Đình Bảo Khôi | 2A202602434 | 20% | Embedding, Chroma, QA retrieval | src/retrieval/embeddings.py, index.py, qa.py, llm.py; data/chroma/, data/embeddings/ |
-| 4 | Nguyễn Thùy Linh | 2A202602497 | 20% | Corruption suite và repair từ raw snapshot | src/ingestion/corruption.py, src/pipelines/corruption_flow.py; corruption_log.json, repaired artifacts |
-| 5 | Nguyễn Thị Thùy Linh | 2A202602909 | 20% | Orchestration, dashboard và live demo | src/pipelines/phase1.py, script/, dashboard/; kiểm tra end-to-end |
+| STT | Họ và tên          | MSSV        | Tỷ trọng đề xuất | Phụ trách chính                                         | Bằng chứng cần đối chiếu                                                                               |
+| --: | :----------------- | :---------- | ---------------: | :------------------------------------------------------ | :----------------------------------------------------------------------------------------------------- |
+|   1 | Văn Thành Huy      | 2A20262763  |              20% | Ingestion, raw lineage, cleaning                        | src/ingestion/crossref.py, cleaning.py; data/raw/, data/clean/                                         |
+|   2 | Võ Đức Tài         | 2A202603007 |              20% | GX quality, Freshness SLA, golden evaluation, reporting | src/observability/quality.py, reporting.py, src/evaluation/; data/quality/, data/eval/, data/results/  |
+|   3 | Phan Đình Bảo Khôi | 2A202602434 |              20% | Embedding, Chroma, QA retrieval                         | src/retrieval/embeddings.py, index.py, qa.py, llm.py; data/chroma/, data/embeddings/                   |
+|   4 | Nguyễn Thùy Linh   | 2A202602497 |              20% | Corruption suite và repair từ raw snapshot              | src/ingestion/corruption.py, src/pipelines/corruption_flow.py; corruption_log.json, repaired artifacts |
+|   5 | Phạm Thị Thùy Linh | 2A202602909 |              20% | Orchestration, dashboard và live demo                   | src/pipelines/phase1.py, script/, dashboard/; kiểm tra end-to-end                                      |
 
 Hai thành viên tên gần giống nhau được phân biệt bằng đầy đủ họ tên và MSSV ở mọi artifact nộp bài.
 
 ## Ranh giới công việc và bàn giao
 
 1. Huy bàn giao raw snapshot và clean schema cho Tài, Bảo Khôi và Nguyễn Thùy Linh.
-2. Bảo Khôi bàn giao ba Chroma collections và API truy xuất cho Tài và Nguyễn Thị Thùy Linh.
+2. Bảo Khôi bàn giao ba Chroma collections và API truy xuất cho Tài và Phạm Thị Thùy Linh.
 3. Nguyễn Thùy Linh bàn giao corruption log và repaired artifacts cho Tài đánh giá.
 4. Tài khóa golden set 10 câu, quality/freshness reports và bảng metrics.
-5. Nguyễn Thị Thùy Linh tích hợp pipeline baseline và dashboard trình chiếu từ các artifact đã bàn giao.
+5. Phạm Thị Thùy Linh tích hợp pipeline baseline và dashboard trình chiếu từ các artifact đã bàn giao.
 
 Mỗi luồng cần có review chéo ít nhất một lần để giảm nghẽn khi bàn giao. Người phụ trách báo cáo cần lấy số liệu trực tiếp từ artifact, không tự nhập lại kết quả cũ.
 
@@ -66,21 +66,21 @@ Nội dung dưới đây đã được điền theo tên và công việc của 
 - Bàn giao: Bàn giao corrupted/repaired artifacts để chấm trên cùng golden set và tạo bảng so sánh.
 - Báo cáo cá nhân đã điền: [report/2A202602497_NguyenThuyLinh.md](../report/2A202602497_NguyenThuyLinh.md).
 
-### Nguyễn Thị Thùy Linh — 2A202602909
+### Phạm Thị Thùy Linh — 2A202602909
 
 - Vai trò: Orchestration, dashboard và live demo (20% phân công đề xuất).
 - Phần việc: Kiểm tra thứ tự ingest → clean → index → evaluate → report trong src/pipelines/phase1.py.
 - Phần việc: Chạy luồng corruption/repair và đối chiếu artifact cuối cùng; kết nối các phần việc qua script/.
 - Phần việc: Chuẩn bị dashboard/ và kịch bản trình bày baseline, corrupted, repaired cùng live retrieval.
 - Bàn giao: Tích hợp các artifact đã khóa từ bốn luồng còn lại để demo nhất quán.
-- Báo cáo cá nhân đã điền: [report/2A202602909_NguyenThiThuyLinh.md](../report/2A202602909_NguyenThiThuyLinh.md).
+- Báo cáo cá nhân đã điền: [report/2A202602909_PhamThiThuyLinh.md](../report/2A202602909_PhamThiThuyLinh.md).
 
 ## Xác nhận trước khi nộp
 
-| Thành viên | Nội dung theo phân công | Báo cáo cá nhân | Commit/đóng góp thực tế |
-| :--- | :---: | :---: | :---: |
-| Văn Thành Huy | Đã điền | Đã điền nội dung | Chờ cá nhân xác nhận |
-| Võ Đức Tài | Đã điền | Đã điền nội dung | Chờ cá nhân xác nhận |
-| Phan Đình Bảo Khôi | Đã điền | Đã điền nội dung | Chờ cá nhân xác nhận |
-| Nguyễn Thùy Linh | Đã điền | Đã điền nội dung | Chờ cá nhân xác nhận |
-| Nguyễn Thị Thùy Linh | Đã điền | Đã điền nội dung | Chờ cá nhân xác nhận |
+| Thành viên         | Nội dung theo phân công | Báo cáo cá nhân  | Commit/đóng góp thực tế |
+| :----------------- | :---------------------: | :--------------: | :---------------------: |
+| Văn Thành Huy      |         Đã điền         | Đã điền nội dung |  Chờ cá nhân xác nhận   |
+| Võ Đức Tài         |         Đã điền         | Đã điền nội dung |  Chờ cá nhân xác nhận   |
+| Phan Đình Bảo Khôi |         Đã điền         | Đã điền nội dung |  Chờ cá nhân xác nhận   |
+| Nguyễn Thùy Linh   |         Đã điền         | Đã điền nội dung |  Chờ cá nhân xác nhận   |
+| Phạm Thị Thùy Linh |         Đã điền         | Đã điền nội dung |  Chờ cá nhân xác nhận   |

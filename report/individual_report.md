@@ -6,6 +6,6 @@
 - [Võ Đức Tài — 2A202603007](2A202603007_VoDucTai.md)
 - [Phan Đình Bảo Khôi — 2A202602434](2A202602434_PhanDinhBaoKhoi.md)
 - [Nguyễn Thùy Linh — 2A202602497](2A202602497_NguyenThuyLinh.md)
-- [Nguyễn Thị Thùy Linh — 2A202602909](2A202602909_NguyenThiThuyLinh.md)
+- [Phạm Thị Thùy Linh — 2A202602909](2A202602909_PhamThiThuyLinh.md)
 
 Bảng kết quả chung: [group_report.md](group_report.md).

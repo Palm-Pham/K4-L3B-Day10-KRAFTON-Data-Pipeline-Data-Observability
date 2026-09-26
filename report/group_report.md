@@ -18,22 +18,22 @@ Các số liệu QA trên được tạo bằng câu trả lời từ metadata. 
 
 Mỗi người sở hữu một luồng chính, có đầu vào, đầu ra và minh chứng riêng. Mức 20% là phân bổ công việc đề xuất, chưa phải xác nhận đóng góp đã thực hiện. Tên và MSSV đã được điền theo danh sách nhóm cung cấp. Từng thành viên cần xác nhận phần việc thực tế trước khi nộp.
 
-| Thành viên | Tên / MSSV | Tỷ trọng đề xuất | Luồng phụ trách | Deliverable và minh chứng |
-| :--- | :--- | :---: | :--- | :--- |
-| 1 | Văn Thành Huy / 2A20262763 | 20% | Ingestion, raw lineage và cleaning | src/ingestion/crossref.py, cleaning.py; data/raw/, data/clean/ |
-| 2 | Võ Đức Tài / 2A202603007 | 20% | GX quality, Freshness SLA, golden evaluation và reporting | src/observability/quality.py, reporting.py, src/evaluation/; data/quality/, data/eval/, data/results/ |
-| 3 | Phan Đình Bảo Khôi / 2A202602434 | 20% | Embedding, Chroma index và QA retrieval | src/retrieval/embeddings.py, index.py, qa.py, llm.py; data/chroma/, data/embeddings/ |
-| 4 | Nguyễn Thùy Linh / 2A202602497 | 20% | Corruption suite và repair từ raw snapshot | src/ingestion/corruption.py, src/pipelines/corruption_flow.py; corruption_log.json, repaired artifacts |
-| 5 | Nguyễn Thị Thùy Linh / 2A202602909 | 20% | Orchestration, dashboard và live demo | src/pipelines/phase1.py, script/, dashboard/; kiểm tra end-to-end và trình bày |
+| Thành viên | Tên / MSSV                       | Tỷ trọng đề xuất | Luồng phụ trách                                           | Deliverable và minh chứng                                                                              |
+| :--------- | :------------------------------- | :--------------: | :-------------------------------------------------------- | :----------------------------------------------------------------------------------------------------- |
+| 1          | Văn Thành Huy / 2A20262763       |       20%        | Ingestion, raw lineage và cleaning                        | src/ingestion/crossref.py, cleaning.py; data/raw/, data/clean/                                         |
+| 2          | Võ Đức Tài / 2A202603007         |       20%        | GX quality, Freshness SLA, golden evaluation và reporting | src/observability/quality.py, reporting.py, src/evaluation/; data/quality/, data/eval/, data/results/  |
+| 3          | Phan Đình Bảo Khôi / 2A202602434 |       20%        | Embedding, Chroma index và QA retrieval                   | src/retrieval/embeddings.py, index.py, qa.py, llm.py; data/chroma/, data/embeddings/                   |
+| 4          | Nguyễn Thùy Linh / 2A202602497   |       20%        | Corruption suite và repair từ raw snapshot                | src/ingestion/corruption.py, src/pipelines/corruption_flow.py; corruption_log.json, repaired artifacts |
+| 5          | Phạm Thị Thùy Linh / 2A202602909 |       20%        | Orchestration, dashboard và live demo                     | src/pipelines/phase1.py, script/, dashboard/; kiểm tra end-to-end và trình bày                         |
 
-Báo cáo cá nhân đã điền theo phân công: [Văn Thành Huy](2A20262763_VanThanhHuy.md) · [Võ Đức Tài](2A202603007_VoDucTai.md) · [Phan Đình Bảo Khôi](2A202602434_PhanDinhBaoKhoi.md) · [Nguyễn Thùy Linh](2A202602497_NguyenThuyLinh.md) · [Nguyễn Thị Thùy Linh](2A202602909_NguyenThiThuyLinh.md).
+Báo cáo cá nhân đã điền theo phân công: [Văn Thành Huy](2A20262763_VanThanhHuy.md) · [Võ Đức Tài](2A202603007_VoDucTai.md) · [Phan Đình Bảo Khôi](2A202602434_PhanDinhBaoKhoi.md) · [Nguyễn Thùy Linh](2A202602497_NguyenThuyLinh.md) · [Phạm Thị Thùy Linh](2A202602909_PhamThiThuyLinh.md).
 
 ### Điểm bàn giao giữa các luồng
 
 1. Huy bàn giao raw snapshot và clean schema cho Tài, Bảo Khôi và Nguyễn Thùy Linh.
-2. Bảo Khôi bàn giao ba Chroma collections và API truy xuất cho Tài và Nguyễn Thị Thùy Linh.
+2. Bảo Khôi bàn giao ba Chroma collections và API truy xuất cho Tài và Phạm Thị Thùy Linh.
 3. Nguyễn Thùy Linh bàn giao corruption log và repaired artifacts cho Tài đánh giá.
-4. Tài khóa golden set, quality/freshness reports và bảng metrics; Nguyễn Thị Thùy Linh dùng chính các artifact đó cho dashboard/demo.
+4. Tài khóa golden set, quality/freshness reports và bảng metrics; Phạm Thị Thùy Linh dùng chính các artifact đó cho dashboard/demo.
 5. Cả 5 người cùng rà bảng kết quả, lịch sử commit và báo cáo cá nhân trước khi nộp.
 
 ## 3. Kiến trúc và lineage
@@ -53,10 +53,10 @@ Bằng chứng nguồn: [raw response](../data/raw/crossref_response.json), [raw
 ## 4. Chất lượng dữ liệu
 
 | Trạng thái | Số bản ghi | GX checks đạt | Freshness | Tỷ lệ quá hạn |
-| :--- | ---: | ---: | :--- | ---: |
-| Baseline | 24 | 5/5 | Đạt | 4.2% |
-| Corrupted | 22 | 3/5 | Vi phạm | 50.0% |
-| Repaired | 24 | 5/5 | Đạt | 4.2% |
+| :--------- | ---------: | ------------: | :-------- | ------------: |
+| Baseline   |         24 |           5/5 | Đạt       |          4.2% |
+| Corrupted  |         22 |           3/5 | Vi phạm   |         50.0% |
+| Repaired   |         24 |           5/5 | Đạt       |          4.2% |
 
 SLA: tài liệu có age_days lớn hơn 180 được tính là quá hạn; cảnh báo khi tỷ lệ quá hạn vượt 25%. Snapshot hiện tại có ngày xuất bản mới nhất 2026-07-22 và cũ nhất 2026-03-28. GX kiểm tra số dòng, paper_id/title không null, DOI duy nhất và độ dài title.
 
@@ -66,13 +66,13 @@ Bằng chứng: [baseline quality](../data/quality/baseline_quality_report.json)
 
 Golden set cố định gồm 10 câu trên 10 DOI khác nhau, bao phủ summary (3), authors (3), date (2), categories (2). Hit@1 yêu cầu DOI đúng ở vị trí đầu; Hit@4 yêu cầu DOI đúng trong bốn kết quả đầu. Token F1 so sánh token giữa câu trả lời metadata và đáp án chuẩn. Bộ challenge 2 câu hỏi về tiêu đề không có trong corpus được chấm riêng.
 
-| Metric | Baseline | Corrupted | Repaired |
-| :--- | ---: | ---: | ---: |
-| Hit@1 | 100.0% | 40.0% | 100.0% |
-| Hit@4 | 100.0% | 60.0% | 100.0% |
-| Mean Token F1 | 1.0000 | 0.7788 | 1.0000 |
-| Heuristic Judge Accuracy | 100.0% | 80.0% | 100.0% |
-| Mean Judge Score (1–5) | 5.00 | 4.00 | 5.00 |
+| Metric                   | Baseline | Corrupted | Repaired |
+| :----------------------- | -------: | --------: | -------: |
+| Hit@1                    |   100.0% |     40.0% |   100.0% |
+| Hit@4                    |   100.0% |     60.0% |   100.0% |
+| Mean Token F1            |   1.0000 |    0.7788 |   1.0000 |
+| Heuristic Judge Accuracy |   100.0% |     80.0% |   100.0% |
+| Mean Judge Score (1–5)   |     5.00 |      4.00 |     5.00 |
 
 Khi dữ liệu bị lỗi, Hit@1 giảm 60.0 điểm phần trăm và Hit@4 giảm 40.0 điểm phần trăm. Sau repair, hai chỉ số trở về mức baseline. Đây là bằng chứng về suy giảm retrieval và phục hồi trên snapshot hiện tại; không suy rộng thành độ chính xác ở corpus lớn hay câu trả lời LLM thật.
 

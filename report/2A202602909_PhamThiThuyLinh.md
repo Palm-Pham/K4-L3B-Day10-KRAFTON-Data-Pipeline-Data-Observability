@@ -1,4 +1,4 @@
-# Báo cáo cá nhân — Nguyễn Thị Thùy Linh
+# Báo cáo cá nhân — Phạm Thị Thùy Linh
 
 **MSSV:** 2A202602909 · **Nhóm:** KRAFTON · **Lớp:** K4-L3B
 **Vai trò theo phân công:** Orchestration, dashboard và live demo · **Tỷ trọng phân công:** 20%
