@@ -53,6 +53,6 @@ Bàn giao ba persisted indexes, manifest và hàm search/QA cho evaluation, pipe
 
 ## 7. Xác nhận nội dung cá nhân
 
-Trước khi nộp, người đứng tên cần đối chiếu mô tả công việc với phần mình thực hiện và lịch sử commit trên nhánh nộp bài. Nếu phân công khác đóng góp thực tế, sửa báo cáo này và TEAM.md cho khớp.
+thiết kế data pipeline, bổ sung một số chỉnh sửa nhỏ sau labwork. thiết kế web demo trực quan dễ hiểu.
 
 Số liệu toàn nhóm được đối chiếu tại [group_report.md](group_report.md).
