@@ -1,6 +1,6 @@
 # K4-L3B-Day10 — Data Pipeline & Data Observability for RAG
 
-**Cài đặt và mở web demo trên nhánh `khoi`: [Hướng dẫn từng bước cho người mới](docs/README_khoi.md).** Tài liệu gồm cấu hình API key, xử lý lỗi và danh sách file/lệnh commit, push an toàn.
+**Cài đặt và mở web demo trên nhánh `khoi`: [Hướng dẫn từng bước siêu dễ hiểu](docs/README_khoi.md).** Tài liệu gồm cấu hình API key, xử lý lỗi và danh sách file/lệnh commit, push an toàn.
 
 > **Hình thức:** Teamwork | **Thời lượng:** 240 phút  
 > **Lịch học (Lớp B - Ca Sáng):** Thứ 7 (26/09/2026) 09:00 – 13:00  
