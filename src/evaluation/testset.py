@@ -55,3 +55,22 @@ def build_test_set(df: pd.DataFrame, output_path=None) -> list[dict[str, Any]]:
     if output_path is not None:
         write_json(output_path, questions)
     return questions
+
+
+def validate_test_set(questions: list[dict[str, Any]], df: pd.DataFrame) -> None:
+    """Reject a stale or malformed benchmark instead of silently regenerating it."""
+    if len(questions) != 10 or len({q.get("id") for q in questions}) != 10:
+        raise ValueError("Benchmark must contain ten uniquely identified questions")
+    if {q.get("question_type") for q in questions} != {"summary", "authors", "date", "categories"}:
+        raise ValueError("Benchmark must cover summary, authors, date and categories")
+    by_id = {row["paper_id"]: row for row in df.to_dict(orient="records")}
+    for item in questions:
+        if not item.get("question") or not item.get("ground_truth") or len(item.get("ground_truth_doc_ids", [])) != 1:
+            raise ValueError("Benchmark question/reference must be nonempty and identify one source")
+        source = by_id.get(item["ground_truth_doc_ids"][0])
+        if source is None:
+            raise ValueError(f"Benchmark source is absent: {item['id']}")
+        expected = {"summary": first_sentence(source["summary"]), "authors": source["authors_joined"],
+                    "date": source["published"], "categories": source["categories_joined"]}[item["question_type"]]
+        if item["ground_truth"] != expected:
+            raise ValueError(f"Benchmark ground truth disagrees with source: {item['id']}")

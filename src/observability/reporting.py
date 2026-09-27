@@ -11,12 +11,7 @@ def generate_phase1_report(
     freshness: dict[str, Any],
 ) -> None:
     """Write the measured baseline results as a Markdown report."""
-    from pathlib import Path
-
     from core.utils import write_text
-
-    if Path(report_path).exists():
-        raise FileExistsError(f"Baseline report already exists: {report_path}")
 
     lines = [
         "# Phase 1 baseline report",
@@ -33,14 +28,37 @@ def generate_phase1_report(
         f"- Chroma collection: `{source_summary['collection_name']}`",
         f"- Indexed documents: {source_summary['indexed_documents']}",
         f"- Benchmark questions: {source_summary['test_questions']}",
+        f"- Raw snapshot SHA-256: {source_summary.get('raw_sha256', 'not recorded')}",
+        f"- Frozen test set SHA-256: {source_summary.get('test_set_sha256', 'not recorded')}",
+        "",
+        "## Stage results",
+        "",
+        "| Stage | Result |",
+        "| --- | --- |",
+        f"| 1. Ingest | {source_summary['input_records']} records |",
+        f"| 2. Clean | {source_summary['clean_records']} rows; {source_summary['dropped_records']} removed |",
+        f"| 3. Quality gate before indexing | {'PASS' if quality['success'] else 'FAIL'} |",
+        f"| 4. Index and frozen benchmark | {source_summary['indexed_documents']} documents; {source_summary['test_questions']} questions |",
+        f"| 5. Evaluate | {metrics['samples']} answers scored |",
+        "| 6. Report | Generated from measured results |",
         "",
         "## Evaluation",
+        "",
+        "Answers use the existing extractive QA component, with exact-ID lookup followed by semantic retrieval. "
+        "Hit Rate measures whether a reference document appears in retrieved results; Token F1 measures answer/reference token-set overlap.",
+        f"Configured judge provider: {source_summary.get('llm_provider', 'unspecified')}; model: {source_summary.get('model_name', 'unspecified')}. "
+        "The existing evaluator may use its heuristic judge fallback; judge scores do not affect Hit Rate or Token F1.",
+        f"Heuristic judge answers: {metrics.get('heuristic_judge_count', 0)}/{metrics['samples']}. "
+        "Answers are extractive metadata QA, not an online LLM generation benchmark. Explicit missing paper references abstain.",
         "",
         "| Measure | Result |",
         "| --- | ---: |",
         f"| Evaluated questions | {metrics['samples']} |",
         f"| Retrieval Hit Rate | {metrics['retrieval_hit_rate']:.2%} |",
         f"| Mean Token F1 | {metrics['mean_token_f1']:.4f} |",
+        f"| Answer source Hit Rate | {metrics.get('answer_source_hit_rate', 0):.2%} |",
+        f"| Grounded Token F1 | {metrics.get('mean_grounded_token_f1', 0):.4f} |",
+        f"| Abstention rate | {metrics.get('abstention_rate', 0):.2%} |",
         f"| Judge accuracy | {metrics['judge_accuracy']:.2%} |",
         f"| Mean judge score | {metrics['mean_judge_score']:.2f}/5 |",
     ]
@@ -110,6 +128,7 @@ def generate_corruption_report(
         "",
         f"All three evaluations use the saved test set `{benchmark['test_set_path']}` "
         f"with {benchmark['question_count']} questions.",
+        f"Frozen test set SHA-256: {benchmark.get('test_set_sha256', 'not recorded')}",
         "",
         "| Measure | Baseline | Corrupted | Repaired |",
         "| --- | ---: | ---: | ---: |",
@@ -117,6 +136,10 @@ def generate_corruption_report(
         row("Evaluated questions", tuple(str(item["samples"]) for item in metrics)),
         row("Retrieval Hit Rate", tuple(f"{item['retrieval_hit_rate']:.2%}" for item in metrics)),
         row("Mean Token F1", tuple(f"{item['mean_token_f1']:.4f}" for item in metrics)),
+        row("Answer source Hit Rate", tuple(f"{item.get('answer_source_hit_rate', 0):.2%}" for item in metrics)),
+        row("Grounded Token F1", tuple(f"{item.get('mean_grounded_token_f1', 0):.4f}" for item in metrics)),
+        row("Abstention rate", tuple(f"{item.get('abstention_rate', 0):.2%}" for item in metrics)),
+        row("Heuristic judge answers", tuple(str(item.get('heuristic_judge_count', 0)) for item in metrics)),
         row("Judge accuracy", tuple(f"{item['judge_accuracy']:.2%}" for item in metrics)),
         row("Mean judge score / 5", tuple(f"{item['mean_judge_score']:.2f}" for item in metrics)),
         row("Quality gate passed", tuple(str(item["success"]) for item in qualities)),
@@ -148,6 +171,9 @@ def generate_corruption_report(
         "",
         "- Repaired clean records were checked against the saved baseline records and rebuilt twice from the raw snapshot.",
         "- Repaired answers and retrieved document IDs were checked again against the same collection and questions.",
+        "- Corrupted quality failure triggers repair; repaired quality must pass before publishing its index.",
+        "- Missing explicit paper references abstain. Grounded Token F1 is zero when the answer source is not the reference DOI.",
+        "- Judge fallback is heuristic; its accuracy must not be presented as independent LLM evaluation.",
     ])
     quoted = benchmark["quoted_doi_questions"]
     if quoted:

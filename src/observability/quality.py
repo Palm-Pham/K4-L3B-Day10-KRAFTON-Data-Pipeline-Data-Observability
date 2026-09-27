@@ -1,8 +1,10 @@
 from __future__ import annotations
 
 from typing import Any
+import math
 
 import great_expectations as gx
+from great_expectations.data_context.types.base import DataContextConfig, InMemoryStoreBackendDefaults
 import pandas as pd
 
 from core.config import Settings
@@ -12,7 +14,8 @@ from core.utils import safe_slug, write_json
 def _freshness_metrics(df: pd.DataFrame, settings: Settings) -> dict[str, Any]:
     total_rows = len(df)
     ages = pd.to_numeric(df["age_days"], errors="coerce") if "age_days" in df else pd.Series(dtype=float)
-    invalid_age_rows = total_rows - int(ages.notna().sum())
+    valid_ages = ages.map(lambda age: pd.notna(age) and math.isfinite(age) and age >= 0 and float(age).is_integer())
+    invalid_age_rows = total_rows - int(valid_ages.sum())
     stale_rows = int(ages.gt(settings.freshness_threshold_days).sum())
     stale_ratio = stale_rows / total_rows if total_rows else 0.0
     published = pd.to_datetime(df["published"], errors="coerce") if "published" in df else pd.Series(dtype="datetime64[ns]")
@@ -36,7 +39,9 @@ def run_data_quality_checks(df: pd.DataFrame, settings: Settings, report_name: s
 
     Pass report_name=None to inspect the result without writing an artifact.
     """
-    context = gx.get_context(mode="ephemeral")
+    context = gx.get_context(mode="ephemeral", project_config=DataContextConfig(
+        store_backend_defaults=InMemoryStoreBackendDefaults(init_temp_docs_sites=False)
+    ))
     data_source = context.data_sources.add_pandas(name="papers_source")
     data_asset = data_source.add_dataframe_asset(name="papers_asset")
     batch_def = data_asset.add_batch_definition_whole_dataframe("papers_batch")

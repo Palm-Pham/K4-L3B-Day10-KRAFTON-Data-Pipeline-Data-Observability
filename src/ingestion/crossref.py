@@ -31,7 +31,9 @@ class PaperRecord:
 
 def parse_crossref_payload(payload: dict) -> list[PaperRecord]:
     """Map Crossref API items to raw paper records; skip unusable items."""
-    items = payload.get("message", {}).get("items", [])
+    if not isinstance(payload, dict) or not isinstance(payload.get("message"), dict):
+        raise ValueError("Crossref payload must contain a message object")
+    items = payload["message"].get("items", [])
     if not isinstance(items, list):
         raise ValueError("Crossref payload must contain message.items as a list")
 

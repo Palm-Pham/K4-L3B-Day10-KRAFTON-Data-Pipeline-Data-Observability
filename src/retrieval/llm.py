@@ -14,6 +14,7 @@ from langchain_openai import ChatOpenAI
 
 from core.config import Settings, normalized_provider, require_llm_credentials
 from core.utils import first_sentence
+from retrieval.identity import ABSTENTION, explicit_paper_reference
 
 
 class _MockPaperChatModel(FakeListChatModel):
@@ -48,9 +49,9 @@ class _MockPaperChatModel(FakeListChatModel):
             return ChatResult(generations=[ChatGeneration(message=message)])
 
         if not results:
-            quoted = re.search(r"'([^']+)'", question)
-            if quoted and "lookup_paper" in self.tool_names:
-                return tool_call("lookup_paper", {"paper_id_or_title": quoted.group(1)})
+            reference = explicit_paper_reference(question)
+            if reference and "lookup_paper" in self.tool_names:
+                return tool_call("lookup_paper", {"paper_id_or_title": reference})
             if "semantic_search_papers" in self.tool_names:
                 return tool_call("semantic_search_papers", {"query": question, "top_k": 4})
             return tool_call("lookup_paper", {"paper_id_or_title": question})
@@ -59,6 +60,8 @@ class _MockPaperChatModel(FakeListChatModel):
         content = str(latest.content)
         if (latest.name == "lookup_paper" and content == "No exact paper match found."
                 and "semantic_search_papers" in self.tool_names):
+            if explicit_paper_reference(question):
+                return ChatResult(generations=[ChatGeneration(message=AIMessage(content=ABSTENTION))])
             return tool_call("semantic_search_papers", {"query": question, "top_k": 4})
 
         # Only the first retrieved paper supplies an answer, matching baseline QA.
